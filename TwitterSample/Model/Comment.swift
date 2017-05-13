@@ -11,7 +11,7 @@ final class Comment: Object {
     // MARK: - Properties -
     
     private (set) dynamic var id: String = NSUUID().uuidString
-    dynamic var createdAt: Date?
+    dynamic var createdAt = Date()
     dynamic var content = ""
     dynamic var user: User?
     

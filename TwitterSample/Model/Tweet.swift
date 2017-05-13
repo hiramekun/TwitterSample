@@ -11,11 +11,11 @@ final class Tweet: Object {
     // MARK: - Properties -
     
     private (set) dynamic var id: String = NSUUID().uuidString
-    dynamic var createdAt: Date?
+    dynamic var createdAt = Date()
     dynamic var content = ""
+    dynamic var user: User?
     
     let comments = List<Comment>()
-    let users = LinkingObjects(fromType: User.self, property: "tweets")
     
     
     // MARK: - Configurations -
