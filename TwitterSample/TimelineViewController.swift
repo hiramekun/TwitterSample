@@ -8,7 +8,7 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-class TimelineViewController: UIViewController {
+final class TimelineViewController: UIViewController {
    
     // MARK: - Views -
     
