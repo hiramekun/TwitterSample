@@ -32,11 +32,24 @@ class TimelineViewController: UIViewController {
 }
 
 
-// MARK: - Life Cycle Evens -
+// MARK: - Life Cycle Events -
 
 extension TimelineViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupView()
+    }
+}
+
+
+// MARK: - Setup -
+
+extension TimelineViewController {
+    
+    fileprivate func setupView() {
+        view.addSubview(tableView)
+        view.addSubview(postButton)
     }
 }
