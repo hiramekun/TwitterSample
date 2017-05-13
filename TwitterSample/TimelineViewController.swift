@@ -54,11 +54,11 @@ extension TimelineViewController {
     }
     
     fileprivate func setupLayout() {
-        tableView.snp.makeConstraints { (make) in
+        tableView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
         
-        postButton.snp.makeConstraints { (make) in
+        postButton.snp.makeConstraints { make in
             make.right.bottom.equalTo(view).inset(16)
             make.size.equalTo(56)
         }
