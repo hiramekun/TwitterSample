@@ -10,7 +10,7 @@ final class Tweet: Object {
     
     // MARK: - Properties -
     
-    dynamic var id = ""
+    private (set) dynamic var id: String = NSUUID().uuidString
     dynamic var createdAt: Date?
     dynamic var content = ""
     

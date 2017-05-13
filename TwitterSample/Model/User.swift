@@ -10,7 +10,7 @@ final class User: Object {
     
     // MARK: - Properties -
     
-    dynamic var id = ""
+    private (set) dynamic var id: String = NSUUID().uuidString
     dynamic var name = ""
     
     let tweets = List<Tweet>()
