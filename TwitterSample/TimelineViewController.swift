@@ -6,25 +6,18 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SnapKit
 
 class TimelineViewController: UIViewController {
    
     // MARK: - Views -
     
-    fileprivate lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.frame = CGRect(x: 0, y: 0,
-                                 width: self.view.frame.width, height: self.view.frame.height)
-        
-        return tableView
-    }()
+    fileprivate lazy var tableView = UITableView()
     
     fileprivate lazy var postButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .red
         button.clipsToBounds = true
-        button.frame = CGRect(x: self.view.frame.width - 72, y: self.view.frame.height - 72,
-                              width: 56, height: 56)
         button.layer.cornerRadius = 28
         
         return button
@@ -40,6 +33,7 @@ extension TimelineViewController {
         super.viewDidLoad()
         
         setupView()
+        setupLayout()
     }
 }
 
@@ -51,5 +45,16 @@ extension TimelineViewController {
     fileprivate func setupView() {
         view.addSubview(tableView)
         view.addSubview(postButton)
+    }
+    
+    fileprivate func setupLayout() {
+        tableView.snp.makeConstraints { (make) in
+            make.edges.equalTo(view)
+        }
+        
+        postButton.snp.makeConstraints { (make) in
+            make.right.bottom.equalTo(view).inset(16)
+            make.size.equalTo(56)
+        }
     }
 }
