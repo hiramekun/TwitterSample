@@ -68,7 +68,8 @@ extension TimelineViewController {
         postButton.rx.tap
             .subscribe(onNext: {
                 [weak self] in
-                self?.present(PostTweetViewController(), animated: true)
+                self?.navigationController!.pushViewController(PostTweetViewController(),
+                                                               animated: true)
             })
             .disposed(by: disposeBag)
     }
