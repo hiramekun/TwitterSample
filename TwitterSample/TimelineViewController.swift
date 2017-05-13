@@ -4,8 +4,37 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class TimelineViewController: UIViewController {
+   
+    // MARK: - Views -
+    
+    fileprivate lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.frame = CGRect(x: 0, y: 0,
+                                 width: self.view.frame.width, height: self.view.frame.height)
+        
+        return tableView
+    }()
+    
+    fileprivate lazy var postButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .red
+        button.clipsToBounds = true
+        button.frame = CGRect(x: self.view.frame.width - 72, y: self.view.frame.height - 72,
+                              width: 56, height: 56)
+        button.layer.cornerRadius = 28
+        
+        return button
+    }()
+}
+
+
+// MARK: - Life Cycle Evens -
+
+extension TimelineViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
