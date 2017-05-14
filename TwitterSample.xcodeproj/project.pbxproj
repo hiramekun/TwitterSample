@@ -20,6 +20,7 @@
 		CC0837DD9D26085773E32E57 /* TwitterSampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083EA37FC65A6703CF149F /* TwitterSampleTests.swift */; };
 		CC08383871B74352DCA53E43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC083604168CAD61F4C7363F /* Main.storyboard */; };
 		CC083924D5FDFA3AC8F0D221 /* CreateTweetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083C53FAD1B8E05AFF1DBC /* CreateTweetViewController.swift */; };
+		CC083954EF21107A17B1D599 /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083EE683B1491AD2C47109 /* TimelineViewModel.swift */; };
 		CC083970698EABC7D1608586 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083C620C4F8063898BB8D3 /* Tweet.swift */; };
 		CC083A0E2488DA68C8624B20 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0838924D3CC479E672FD8D /* Comment.swift */; };
 		CC083BBFA0C04DCBED591BF7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC083CA962BF5696F44D6B76 /* LaunchScreen.storyboard */; };
@@ -65,6 +66,7 @@
 		CC083C620C4F8063898BB8D3 /* Tweet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
 		CC083E79969803F205FCE3D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CC083EA37FC65A6703CF149F /* TwitterSampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterSampleTests.swift; sourceTree = "<group>"; };
+		CC083EE683B1491AD2C47109 /* TimelineViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +178,7 @@
 		CC083A69A308C9067DEE9846 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				CC083EE683B1491AD2C47109 /* TimelineViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				CC083A0E2488DA68C8624B20 /* Comment.swift in Sources */,
 				CC0832353E5BD134D57DD696 /* TimelineViewController.swift in Sources */,
 				CC083924D5FDFA3AC8F0D221 /* CreateTweetViewController.swift in Sources */,
+				CC083954EF21107A17B1D599 /* TimelineViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
