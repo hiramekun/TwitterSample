@@ -6,7 +6,7 @@
 import UIKit
 import SnapKit
 
-final class PostTweetViewController: UIViewController {
+final class CreateTweetViewController: UIViewController {
     
     // MARK: - Views -
     
@@ -33,7 +33,7 @@ final class PostTweetViewController: UIViewController {
 
 // MARK: - Life Cycle Events -
 
-extension PostTweetViewController {
+extension CreateTweetViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +46,7 @@ extension PostTweetViewController {
 
 // MARK: - Setup -
 
-extension PostTweetViewController {
+extension CreateTweetViewController {
     
     fileprivate func setupView() {
         view.addSubview(textField)
