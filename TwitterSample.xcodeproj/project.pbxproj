@@ -25,6 +25,7 @@
 		CC083970698EABC7D1608586 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083C620C4F8063898BB8D3 /* Tweet.swift */; };
 		CC083A0E2488DA68C8624B20 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0838924D3CC479E672FD8D /* Comment.swift */; };
 		CC083BBFA0C04DCBED591BF7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC083CA962BF5696F44D6B76 /* LaunchScreen.storyboard */; };
+		CC083EE7699CCD20F3191860 /* CreateTweetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0839F9CCE59F37B1FE1CBB /* CreateTweetViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		CC0835EBDD5933F841E3CF40 /* TwitterSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC0837445AA1578D4DE825B5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CC0838924D3CC479E672FD8D /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		CC0839F9CCE59F37B1FE1CBB /* CreateTweetViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTweetViewModel.swift; sourceTree = SOURCE_ROOT; };
 		CC083AF56BF69C2521ACDA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		CC083BB0583F33185BC8BC3C /* TwitterSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwitterSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC083C53FAD1B8E05AFF1DBC /* CreateTweetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTweetViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -190,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				CC083EE683B1491AD2C47109 /* TimelineViewModel.swift */,
+				CC0839F9CCE59F37B1FE1CBB /* CreateTweetViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 				CC083924D5FDFA3AC8F0D221 /* CreateTweetViewController.swift in Sources */,
 				CC083954EF21107A17B1D599 /* TimelineViewModel.swift in Sources */,
 				CC0838EA5FE3267A56396C58 /* Results+Observable.swift in Sources */,
+				CC083EE7699CCD20F3191860 /* CreateTweetViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
