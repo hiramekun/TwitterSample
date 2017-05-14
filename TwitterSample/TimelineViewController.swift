@@ -9,7 +9,12 @@ import RxCocoa
 import SnapKit
 
 final class TimelineViewController: UIViewController {
-   
+    
+    // MARK: - Properties -
+    
+    fileprivate let disposeBag = DisposeBag()
+    
+    
     // MARK: - Views -
     
     fileprivate lazy var tableView = UITableView()
@@ -34,6 +39,7 @@ extension TimelineViewController {
         
         setupView()
         setupLayout()
+        setupBinding()
     }
 }
 
@@ -48,13 +54,22 @@ extension TimelineViewController {
     }
     
     fileprivate func setupLayout() {
-        tableView.snp.makeConstraints { (make) in
+        tableView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
         
-        postButton.snp.makeConstraints { (make) in
+        postButton.snp.makeConstraints { make in
             make.right.bottom.equalTo(view).inset(16)
             make.size.equalTo(56)
         }
+    }
+    
+    fileprivate func setupBinding() {
+        postButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.navigationController?.pushViewController(CreateTweetViewController(),
+                                                               animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }

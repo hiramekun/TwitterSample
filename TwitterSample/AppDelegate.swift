@@ -20,7 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = TimelineViewController()
+        window?.rootViewController = UINavigationController(
+            rootViewController: TimelineViewController()
+        )
         window?.makeKeyAndVisible()
         
         return true
