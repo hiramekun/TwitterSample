@@ -15,19 +15,6 @@ final class CreateTweetViewController: UIViewController {
         textField.backgroundColor = .gray
         return textField
     }()
-    
-    
-    // MARK: - Initializer -
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        
-        view.backgroundColor = .white
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
 
 
@@ -38,6 +25,7 @@ extension CreateTweetViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configure()
         setupView()
         setupLayout()
     }
@@ -48,14 +36,18 @@ extension CreateTweetViewController {
 
 extension CreateTweetViewController {
     
+    fileprivate func configure() {
+        view.backgroundColor = .white
+    }
+    
     fileprivate func setupView() {
         view.addSubview(textField)
     }
     
     fileprivate func setupLayout() {
         textField.snp.makeConstraints { make in
-            make.top.equalTo(view).inset(96)
             make.left.equalTo(view).inset(32)
+            make.top.equalTo(view).inset(96)
             make.width.equalTo(200)
             make.height.equalTo(32)
         }
