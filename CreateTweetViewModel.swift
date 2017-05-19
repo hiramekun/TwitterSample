@@ -7,7 +7,7 @@ import Foundation
 import RxSwift
 
 protocol CreateTweetViewModelInputs {
-    var submit: Variable<String> { get }
+    var submit: PublishSubject<String> { get }
 }
 
 protocol CreateTweetViewModelType {
@@ -24,7 +24,7 @@ final class CreateTweetViewModel: CreateTweetViewModelInputs {
     
     // MARK: - Inputs -
     
-    let submit = Variable<String>("")
+    let submit = PublishSubject<String>()
     
     
     // MARK: - Initializers -
