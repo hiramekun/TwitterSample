@@ -13,7 +13,7 @@ final class TimelineViewController: UIViewController {
     // MARK: - Properties -
     
     fileprivate let disposeBag = DisposeBag()
-    fileprivate var timelineViewModelType: TimelineViewModelType
+    fileprivate let timelineViewModelType: TimelineViewModelType
     
     
     // MARK: - Views -
