@@ -5,8 +5,15 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 final class CreateTweetViewController: UIViewController {
+    
+    // MARK: - Properties -
+    
+    fileprivate let createTweetViewModelType: CreateTweetViewModelType
+    fileprivate let disposeBag = DisposeBag()
+    
     
     // MARK: - Views -
     
@@ -21,6 +28,19 @@ final class CreateTweetViewController: UIViewController {
         button.backgroundColor = .blue
         return button
     }()
+    
+    
+    // MARK: - Initializers -
+    
+    init(viewModel: CreateTweetViewModelType) {
+        createTweetViewModelType = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError()
+    }
 }
 
 
@@ -34,6 +54,7 @@ extension CreateTweetViewController {
         configure()
         setupView()
         setupLayout()
+        setupBindings()
     }
 }
 
@@ -64,5 +85,26 @@ extension CreateTweetViewController {
             make.top.equalTo(textField)
             make.width.height.equalTo(textField.snp.height)
         }
+    }
+    
+    fileprivate func setupBindings() {
+        
+        submitButton.rx.tap
+            .filter { [weak self] in
+                guard let text = self?.textField.text else { return false }
+                return !text.isEmpty
+            }
+            .subscribe(onNext: { [weak self] in
+                guard  let unwrappedSelf = self else { return }
+                unwrappedSelf.createTweetViewModelType.inputs.submit
+                    .onNext(unwrappedSelf.textField.text!)
+            })
+            .disposed(by: disposeBag)
+        
+        createTweetViewModelType.outputs.created
+            .subscribe(onNext: { [weak self] in
+                self?.dismiss(animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }
