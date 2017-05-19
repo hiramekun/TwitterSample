@@ -13,7 +13,7 @@ final class TimelineViewController: UIViewController {
     // MARK: - Properties -
     
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let timelineViewModelType: TimelineViewModelType
+    fileprivate let viewModel: TimelineViewModelType
     
     
     // MARK: - Views -
@@ -33,7 +33,7 @@ final class TimelineViewController: UIViewController {
     // MARK: - Initializers -
     
     init(viewModel: TimelineViewModelType) {
-        timelineViewModelType = viewModel
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -88,7 +88,7 @@ extension TimelineViewController {
             })
             .disposed(by: disposeBag)
         
-        timelineViewModelType.outputs.tweets
+        viewModel.outputs.tweets
             .subscribe(onNext: { [weak self] change in
                 guard let tableView = self?.tableView else { return }
                 
