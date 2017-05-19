@@ -28,14 +28,14 @@ final class TimelineViewModel: TimelineViewModelOutputs {
     
     var outputs: TimelineViewModelOutputs { return self }
     fileprivate var token: NotificationToken?
-    fileprivate let results = try! Realm().objects(Tweet.self)
+    fileprivate let tweetResults = try! Realm().objects(Tweet.self)
     
     
     // MARK: - Outputs -
     
     lazy var tweets: BehaviorSubject<RealmChange<Tweet>> = {
         return BehaviorSubject<RealmChange<Tweet>>(
-            value: .initial(results: self.results)
+            value: .initial(results: self.tweetResults)
         )
     }()
     
@@ -54,8 +54,8 @@ final class TimelineViewModel: TimelineViewModelOutputs {
 extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {
-        token = results.addNotificationBlock { [weak self] change in
-            guard let tweets = self?.tweets, let results = self?.results else { return }
+        token = tweetResults.addNotificationBlock { [weak self] change in
+            guard let tweets = self?.tweets, let results = self?.tweetResults else { return }
             
             switch change {
             case .initial(results):
