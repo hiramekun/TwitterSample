@@ -52,8 +52,7 @@ final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModel
 extension CreateTweetViewModel {
     
     fileprivate func setupBindings() {
-        submit.asObservable()
-            .subscribe(onNext: { [weak self] string in
+        submit.subscribe(onNext: { [weak self] string in
                 self?.saveTweet(content: string)
             })
             .disposed(by: disposeBag)
