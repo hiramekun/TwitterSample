@@ -51,6 +51,9 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
     }
 }
 
+
+// MARK: - Setup -
+
 extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {

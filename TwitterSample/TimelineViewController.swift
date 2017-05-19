@@ -81,8 +81,10 @@ extension TimelineViewController {
     fileprivate func setupBinding() {
         postButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.navigationController?.pushViewController(CreateTweetViewController(),
-                                                               animated: true)
+                self?.navigationController?.pushViewController(
+                    CreateTweetViewController(viewModel: CreateTweetViewModel()),
+                    animated: true
+                )
             })
             .disposed(by: disposeBag)
         
