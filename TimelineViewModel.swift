@@ -33,7 +33,7 @@ final class TimelineViewModel: TimelineViewModelOutputs {
     
     // MARK: - Outputs -
     
-    internal lazy var tweets: BehaviorSubject<RealmChange<Tweet>> = {
+    lazy var tweets: BehaviorSubject<RealmChange<Tweet>> = {
         return BehaviorSubject<RealmChange<Tweet>>(
             value: .initial(results: self.results)
         )

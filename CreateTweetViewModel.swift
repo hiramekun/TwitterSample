@@ -7,7 +7,7 @@ import Foundation
 import RxSwift
 
 protocol CreateTweetViewModelInputs {
-    var tweetContent: Variable<String> { get }
+    var content: Variable<String> { get }
 }
 
 protocol CreateTweetViewModelType {
@@ -24,7 +24,7 @@ final class CreateTweetViewModel: CreateTweetViewModelInputs {
     
     // MARK: - Inputs -
     
-    let tweetContent = Variable<String>("")
+    let content = Variable<String>("")
     
     
     // MARK: - Initializers -
@@ -38,7 +38,7 @@ final class CreateTweetViewModel: CreateTweetViewModelInputs {
 extension CreateTweetViewModel {
     
     fileprivate func setupBindings() {
-        tweetContent.asObservable()
+        content.asObservable()
             .subscribe(onNext: { string in
                 // TODO: save to realm in repository class
             })
