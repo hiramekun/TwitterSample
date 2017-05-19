@@ -19,7 +19,7 @@ final class CreateTweetViewModel: CreateTweetViewModelInputs {
     // MARK: - Properties -
     
     var inputs: CreateTweetViewModelInputs { return self }
-    let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
     
     
     // MARK: - Inputs -
