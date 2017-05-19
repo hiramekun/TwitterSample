@@ -19,7 +19,6 @@
 		CC08366E1AB142FAFB1E5966 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0833914D1688A41CC480C1 /* User.swift */; };
 		CC0837DD9D26085773E32E57 /* TwitterSampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083EA37FC65A6703CF149F /* TwitterSampleTests.swift */; };
 		CC08383871B74352DCA53E43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC083604168CAD61F4C7363F /* Main.storyboard */; };
-		CC0838EA5FE3267A56396C58 /* Results+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0833116A3485ED31AF3716 /* Results+Observable.swift */; };
 		CC083924D5FDFA3AC8F0D221 /* CreateTweetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083C53FAD1B8E05AFF1DBC /* CreateTweetViewController.swift */; };
 		CC083954EF21107A17B1D599 /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083EE683B1491AD2C47109 /* TimelineViewModel.swift */; };
 		CC083970698EABC7D1608586 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083C620C4F8063898BB8D3 /* Tweet.swift */; };
@@ -52,7 +51,6 @@
 		594DAFFD1EC6A0C60014E85E /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		594DAFFE1EC6A0C60014E85E /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
 		CC083068525831796B6E6EB4 /* TwitterSampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterSampleUITests.swift; sourceTree = "<group>"; };
-		CC0833116A3485ED31AF3716 /* Results+Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Results+Observable.swift"; sourceTree = "<group>"; };
 		CC083320AF46920E6240F6B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		CC0833914D1688A41CC480C1 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		CC0833D93869B6D17B467195 /* TimelineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimelineViewController.swift; path = TwitterSample/TimelineViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -146,7 +144,6 @@
 				CC083A89213B9B6F093B7370 /* View */,
 				CC08325CB1CA7DB4C4DF6EA1 /* Model */,
 				CC083A69A308C9067DEE9846 /* ViewModel */,
-				CC0838B266B3207A791AC63E /* Extension */,
 			);
 			path = TwitterSample;
 			sourceTree = "<group>";
@@ -167,14 +164,6 @@
 				CC083EA37FC65A6703CF149F /* TwitterSampleTests.swift */,
 			);
 			path = TwitterSampleTests;
-			sourceTree = "<group>";
-		};
-		CC0838B266B3207A791AC63E /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				CC0833116A3485ED31AF3716 /* Results+Observable.swift */,
-			);
-			path = Extension;
 			sourceTree = "<group>";
 		};
 		CC083A29A38949893F88D9EA = {
@@ -359,7 +348,6 @@
 				CC0832353E5BD134D57DD696 /* TimelineViewController.swift in Sources */,
 				CC083924D5FDFA3AC8F0D221 /* CreateTweetViewController.swift in Sources */,
 				CC083954EF21107A17B1D599 /* TimelineViewModel.swift in Sources */,
-				CC0838EA5FE3267A56396C58 /* Results+Observable.swift in Sources */,
 				CC083EE7699CCD20F3191860 /* CreateTweetViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,12 +7,14 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import RealmSwift
 
 final class TimelineViewController: UIViewController {
     
     // MARK: - Properties -
     
     fileprivate let disposeBag = DisposeBag()
+    fileprivate lazy var timelineViewModel = TimelineViewModel()
     
     
     // MARK: - Views -
@@ -69,6 +71,41 @@ extension TimelineViewController {
             .subscribe(onNext: { [weak self] in
                 self?.navigationController?.pushViewController(CreateTweetViewController(),
                                                                animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        timelineViewModel.outputs.tweets
+            .subscribe(onNext: { [weak self] change in
+                guard let tableView = self?.tableView else { return }
+                
+                switch change {
+                case .initial(_):
+                    tableView.reloadData()
+                
+                case .deletions(let rows):
+                    tableView.beginUpdates()
+                    tableView.deleteRows(
+                        at: rows.map { IndexPath(row: $0, section: 0) },
+                        with: .fade
+                    )
+                    tableView.endUpdates()
+                
+                case .insertions(let rows):
+                    tableView.beginUpdates()
+                    tableView.insertRows(
+                        at: rows.map { IndexPath(row: $0, section: 0) },
+                        with: .fade
+                    )
+                    tableView.endUpdates()
+                
+                case .modifications(let rows):
+                    tableView.beginUpdates()
+                    tableView.reloadRows(
+                        at: rows.map { IndexPath(row: $0, section: 0) },
+                        with: .none
+                    )
+                    tableView.endUpdates()
+                }
             })
             .disposed(by: disposeBag)
     }
