@@ -49,6 +49,8 @@ final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModel
 }
 
 
+// MARK: - Setup -
+
 extension CreateTweetViewModel {
     
     fileprivate func setupBindings() {
