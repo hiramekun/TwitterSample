@@ -11,21 +11,34 @@ protocol CreateTweetViewModelInputs {
     var submit: PublishSubject<String> { get }
 }
 
-protocol CreateTweetViewModelType {
-    var inputs: CreateTweetViewModelInputs { get }
+protocol CreateTweetViewModelOutputs {
+    var created: PublishSubject<Tweet> { get }
 }
 
-final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModelInputs {
+protocol CreateTweetViewModelType {
+    var inputs: CreateTweetViewModelInputs { get }
+    var outputs: CreateTweetViewModelOutputs { get }
+}
+
+final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModelInputs, CreateTweetViewModelOutputs {
+    
+    
     
     // MARK: - Properties -
     
     var inputs: CreateTweetViewModelInputs { return self }
+    var outputs: CreateTweetViewModelOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
     
     
     // MARK: - Inputs -
     
     let submit = PublishSubject<String>()
+    
+    
+    // MARK: - Outputs -
+    
+    let created = PublishSubject<Tweet>()
     
     
     // MARK: - Initializers -
@@ -51,6 +64,8 @@ extension CreateTweetViewModel {
         try! realm.write {
             let tweet = Tweet(value: ["content": content])
             realm.add(tweet)
+            
+            created.onNext(tweet)
         }
     }
 }
