@@ -15,7 +15,7 @@ enum RealmChange<T:RealmSwift.Object> {
 }
 
 protocol TimelineViewModelOutputs {
-    var tweets: BehaviorSubject<RealmChange<Tweet>> { get }
+    var tweetChanges: BehaviorSubject<RealmChange<Tweet>> { get }
     var tweetVariable: Variable<Results<Tweet>> { get }
 }
 
@@ -38,7 +38,7 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
         return Variable<Results<Tweet>>(self.tweetResults)
     }()
     
-    lazy var tweets: BehaviorSubject<RealmChange<Tweet>> = {
+    lazy var tweetChanges: BehaviorSubject<RealmChange<Tweet>> = {
         return BehaviorSubject<RealmChange<Tweet>>(
             value: .initial(results: self.tweetResults)
         )
@@ -63,7 +63,7 @@ extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {
         token = tweetVariable.value.addNotificationBlock { [weak self] change in
-            guard let tweets = self?.tweets, let results = self?.tweetVariable.value else { return }
+            guard let tweets = self?.tweetChanges, let results = self?.tweetVariable.value else { return }
             
             switch change {
             case .initial(results):

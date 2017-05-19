@@ -82,7 +82,7 @@ extension TimelineViewController {
     }
     
     fileprivate func setupTableViewBinding() {
-        let dataSource = MyDataSource()
+        let dataSource = TimelineDataSource()
         viewModel.outputs.tweetVariable
             .asObservable()
             .bind(to: tableView.rx.items(dataSource: dataSource))
@@ -102,7 +102,7 @@ extension TimelineViewController {
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.tweets
+        viewModel.outputs.tweetChanges
             .subscribe(onNext: { [weak self] change in
                 guard let tableView = self?.tableView else { return }
                 
@@ -140,7 +140,7 @@ extension TimelineViewController {
 }
 
 
-final fileprivate class MyDataSource: NSObject {
+final fileprivate class TimelineDataSource: NSObject {
     
     // MARK: - Properties -
     
@@ -152,7 +152,7 @@ final fileprivate class MyDataSource: NSObject {
 
 // MARK: - RxTableViewDataSourceType -
 
-extension MyDataSource: RxTableViewDataSourceType {
+extension TimelineDataSource: RxTableViewDataSourceType {
     
     func tableView(_ tableView: UITableView, observedEvent: Event<Element>) {
         UIBindingObserver(UIElement: self) { (dataSource, element) in
@@ -165,7 +165,7 @@ extension MyDataSource: RxTableViewDataSourceType {
 
 // MARK: - UITableViewDelegate -
 
-extension MyDataSource: UITableViewDelegate {
+extension TimelineDataSource: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -181,7 +181,7 @@ extension MyDataSource: UITableViewDelegate {
 
 // MARK: - UITableViewDataSource -
 
-extension MyDataSource: UITableViewDataSource {
+extension TimelineDataSource: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
