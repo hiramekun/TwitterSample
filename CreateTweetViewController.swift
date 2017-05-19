@@ -11,7 +11,7 @@ final class CreateTweetViewController: UIViewController {
     
     // MARK: - Properties -
     
-    fileprivate let createTweetViewModelType: CreateTweetViewModelType
+    fileprivate let viewModel: CreateTweetViewModelType
     fileprivate let disposeBag = DisposeBag()
     
     
@@ -33,7 +33,7 @@ final class CreateTweetViewController: UIViewController {
     // MARK: - Initializers -
     
     init(viewModel: CreateTweetViewModelType) {
-        createTweetViewModelType = viewModel
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -88,20 +88,18 @@ extension CreateTweetViewController {
     }
     
     fileprivate func setupBindings() {
-        
         submitButton.rx.tap
             .filter { [weak self] in
-                guard let text = self?.textField.text else { return false }
-                return !text.isEmpty
+                self?.textField.text?.isEmpty == false
             }
             .subscribe(onNext: { [weak self] in
-                guard  let unwrappedSelf = self else { return }
-                unwrappedSelf.createTweetViewModelType.inputs.submit
+                guard let unwrappedSelf = self else { return }
+                unwrappedSelf.viewModel.inputs.submit
                     .onNext(unwrappedSelf.textField.text!)
             })
             .disposed(by: disposeBag)
         
-        createTweetViewModelType.outputs.created
+        viewModel.outputs.created
             .subscribe(onNext: { [weak self] in
                 self?.dismiss(animated: true)
             })
