@@ -7,7 +7,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
-import RealmSwift
 
 final class TimelineViewController: UIViewController {
     
