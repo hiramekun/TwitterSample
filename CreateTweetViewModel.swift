@@ -22,8 +22,6 @@ protocol CreateTweetViewModelType {
 
 final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModelInputs, CreateTweetViewModelOutputs {
     
-    
-    
     // MARK: - Properties -
     
     var inputs: CreateTweetViewModelInputs { return self }
@@ -55,16 +53,17 @@ extension CreateTweetViewModel {
     
     fileprivate func setupBindings() {
         submit.subscribe(onNext: { [weak self] string in
-                self?.saveTweet(content: string)
+                self?.createTweet(content: string)
                 self?.created.onNext()
             })
             .disposed(by: disposeBag)
     }
     
-    private func saveTweet(content: String) {
+    private func createTweet(content: String) {
         let realm = try! Realm()
         try! realm.write {
-            let tweet = Tweet(value: ["content": content])
+            let tweet = Tweet()
+            tweet.content = content
             realm.add(tweet)
         }
     }
