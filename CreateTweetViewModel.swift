@@ -5,7 +5,6 @@
 
 import Foundation
 import RxSwift
-import RxSwift
 
 protocol CreateTweetViewModelInputs {
     var tweetContent: Variable<String> { get }
