@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = UINavigationController(
-            rootViewController: TimelineViewController()
+            rootViewController: TimelineViewController(viewModel: TimelineViewModel())
         )
         window?.makeKeyAndVisible()
         

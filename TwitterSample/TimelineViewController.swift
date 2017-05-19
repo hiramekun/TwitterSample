@@ -13,6 +13,7 @@ final class TimelineViewController: UIViewController {
     // MARK: - Properties -
     
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let timelineViewModelType: TimelineViewModelType
     
     
     // MARK: - Views -
@@ -27,6 +28,19 @@ final class TimelineViewController: UIViewController {
         
         return button
     }()
+    
+    
+    // MARK: - Initializers -
+    
+    init(viewModel: TimelineViewModelType) {
+        timelineViewModelType = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError()
+    }
 }
 
 
@@ -69,6 +83,41 @@ extension TimelineViewController {
             .subscribe(onNext: { [weak self] in
                 self?.navigationController?.pushViewController(CreateTweetViewController(),
                                                                animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        timelineViewModelType.outputs.tweets
+            .subscribe(onNext: { [weak self] change in
+                guard let tableView = self?.tableView else { return }
+                
+                switch change {
+                case .initial(_):
+                    tableView.reloadData()
+                
+                case .deletions(let rows):
+                    tableView.beginUpdates()
+                    tableView.deleteRows(
+                        at: rows.map { IndexPath(row: $0, section: 0) },
+                        with: .fade
+                    )
+                    tableView.endUpdates()
+                
+                case .insertions(let rows):
+                    tableView.beginUpdates()
+                    tableView.insertRows(
+                        at: rows.map { IndexPath(row: $0, section: 0) },
+                        with: .fade
+                    )
+                    tableView.endUpdates()
+                
+                case .modifications(let rows):
+                    tableView.beginUpdates()
+                    tableView.reloadRows(
+                        at: rows.map { IndexPath(row: $0, section: 0) },
+                        with: .none
+                    )
+                    tableView.endUpdates()
+                }
             })
             .disposed(by: disposeBag)
     }
