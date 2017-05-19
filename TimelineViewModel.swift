@@ -22,7 +22,7 @@ protocol TimelineViewModelType {
     var outputs: TimelineViewModelOutputs { get }
 }
 
-final class TimelineViewModel: TimelineViewModelOutputs {
+final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
     
     // MARK: - Properties -
     

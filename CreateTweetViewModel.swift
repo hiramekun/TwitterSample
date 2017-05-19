@@ -14,7 +14,7 @@ protocol CreateTweetViewModelType {
     var inputs: CreateTweetViewModelInputs { get }
 }
 
-final class CreateTweetViewModel: CreateTweetViewModelInputs {
+final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModelInputs {
     
     // MARK: - Properties -
     
