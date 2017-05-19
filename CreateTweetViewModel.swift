@@ -38,8 +38,7 @@ final class CreateTweetViewModel: CreateTweetViewModelInputs {
 extension CreateTweetViewModel {
     
     fileprivate func setupBindings() {
-        submit.asObservable()
-            .subscribe(onNext: { string in
+        submit.subscribe(onNext: { string in
                 // TODO: save to realm in repository class
             })
             .disposed(by: disposeBag)
