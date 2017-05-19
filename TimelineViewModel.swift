@@ -27,8 +27,8 @@ final class TimelineViewModel: TimelineViewModelOutputs {
     // MARK: - Properties -
     
     var outputs: TimelineViewModelOutputs { return self }
-    private var token: NotificationToken?
-    private let results = try! Realm().objects(Tweet.self)
+    fileprivate var token: NotificationToken?
+    fileprivate let results = try! Realm().objects(Tweet.self)
     
     
     // MARK: - Outputs -
@@ -43,6 +43,17 @@ final class TimelineViewModel: TimelineViewModelOutputs {
     // MARK: - Life Cycle Events -
     
     init() {
+        setupNotificationToken()
+    }
+    
+    deinit {
+        token?.stop()
+    }
+}
+
+extension TimelineViewModel {
+    
+    fileprivate func setupNotificationToken() {
         token = results.addNotificationBlock { [weak self] change in
             guard let tweets = self?.tweets, let results = self?.results else { return }
             
@@ -59,9 +70,5 @@ final class TimelineViewModel: TimelineViewModelOutputs {
                 break
             }
         }
-    }
-    
-    deinit {
-        token?.stop()
     }
 }
