@@ -5,6 +5,7 @@
 
 import Foundation
 import RxSwift
+import RealmSwift
 
 protocol CreateTweetViewModelInputs {
     var submit: PublishSubject<String> { get }
@@ -38,9 +39,18 @@ final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModel
 extension CreateTweetViewModel {
     
     fileprivate func setupBindings() {
-        submit.subscribe(onNext: { string in
-                // TODO: save to realm in repository class
+        submit.asObservable()
+            .subscribe(onNext: { [weak self] string in
+                self?.saveTweet(content: string)
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func saveTweet(content: String) {
+        let realm = try! Realm()
+        try! realm.write {
+            let tweet = Tweet(value: ["content": content])
+            realm.add(tweet)
+        }
     }
 }
