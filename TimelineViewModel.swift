@@ -16,6 +16,7 @@ enum RealmChange<T:RealmSwift.Object> {
 
 protocol TimelineViewModelOutputs {
     var tweets: BehaviorSubject<RealmChange<Tweet>> { get }
+    var tweetVariable: Variable<Results<Tweet>> { get }
 }
 
 protocol TimelineViewModelType {
@@ -32,6 +33,10 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
     
     
     // MARK: - Outputs -
+    
+    lazy var tweetVariable: Variable<Results<Tweet>> = {
+        return Variable<Results<Tweet>>(self.tweetResults)
+    }()
     
     lazy var tweets: BehaviorSubject<RealmChange<Tweet>> = {
         return BehaviorSubject<RealmChange<Tweet>>(
@@ -57,16 +62,16 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
 extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {
-        token = tweetResults.addNotificationBlock { [weak self] change in
-            guard let tweets = self?.tweets, let results = self?.tweetResults else { return }
+        token = tweetVariable.value.addNotificationBlock { [weak self] change in
+            guard let tweets = self?.tweets, let results = self?.tweetVariable.value else { return }
             
             switch change {
             case .initial(results):
                 tweets.onNext(.initial(results: results))
             case .update(results, let deletions, let insertions, let modifications):
-                tweets.onNext(.deletions(rows: deletions))
-                tweets.onNext(.insertions(rows: insertions))
-                tweets.onNext(.modifications(rows: modifications))
+                if deletions.count > 0 { tweets.onNext(.deletions(rows: deletions)) }
+                if insertions.count > 0 { tweets.onNext(.insertions(rows: insertions)) }
+                if modifications.count > 0 { tweets.onNext(.modifications(rows: modifications)) }
             case .error(let error):
                 tweets.onError(error)
             default:

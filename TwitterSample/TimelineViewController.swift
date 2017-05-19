@@ -7,6 +7,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import RealmSwift
 
 final class TimelineViewController: UIViewController {
     
@@ -50,10 +51,12 @@ extension TimelineViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         setupView()
         setupLayout()
         setupBinding()
+        setupTableViewBinding()
     }
 }
 
@@ -76,6 +79,17 @@ extension TimelineViewController {
             make.right.bottom.equalTo(view).inset(16)
             make.size.equalTo(56)
         }
+    }
+    
+    fileprivate func setupTableViewBinding() {
+        let dataSource = MyDataSource()
+        viewModel.outputs.tweetVariable
+            .asObservable()
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+        
+        tableView.dataSource = dataSource
+        tableView.delegate = dataSource
     }
     
     fileprivate func setupBinding() {
@@ -122,5 +136,66 @@ extension TimelineViewController {
                 }
             })
             .disposed(by: disposeBag)
+    }
+}
+
+
+final fileprivate class MyDataSource: NSObject {
+    
+    // MARK: - Properties -
+    
+    typealias Element = Results<Tweet>
+    fileprivate var itemModels: Element = try! Realm().objects(Tweet.self)
+    fileprivate let selectedIndexPath = PublishSubject<IndexPath>()
+}
+
+
+// MARK: - RxTableViewDataSourceType -
+
+extension MyDataSource: RxTableViewDataSourceType {
+    
+    func tableView(_ tableView: UITableView, observedEvent: Event<Element>) {
+        UIBindingObserver(UIElement: self) { (dataSource, element) in
+            dataSource.itemModels = element
+            tableView.reloadData()
+        }.on(observedEvent)
+    }
+}
+
+
+// MARK: - UITableViewDelegate -
+
+extension MyDataSource: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndexPath.onNext(indexPath)
+    }
+    
+}
+
+
+// MARK: - UITableViewDataSource -
+
+extension MyDataSource: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return itemModels.count
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = itemModels[indexPath.row].content
+        return cell
     }
 }
