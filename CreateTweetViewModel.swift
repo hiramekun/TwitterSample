@@ -12,7 +12,7 @@ protocol CreateTweetViewModelInputs {
 }
 
 protocol CreateTweetViewModelOutputs {
-    var created: PublishSubject<Tweet> { get }
+    var created: PublishSubject<Void> { get }
 }
 
 protocol CreateTweetViewModelType {
@@ -38,7 +38,7 @@ final class CreateTweetViewModel: CreateTweetViewModelType, CreateTweetViewModel
     
     // MARK: - Outputs -
     
-    let created = PublishSubject<Tweet>()
+    let created = PublishSubject<Void>()
     
     
     // MARK: - Initializers -
@@ -54,6 +54,7 @@ extension CreateTweetViewModel {
     fileprivate func setupBindings() {
         submit.subscribe(onNext: { [weak self] string in
                 self?.saveTweet(content: string)
+                self?.created.onNext()
             })
             .disposed(by: disposeBag)
     }
@@ -63,8 +64,6 @@ extension CreateTweetViewModel {
         try! realm.write {
             let tweet = Tweet(value: ["content": content])
             realm.add(tweet)
-            
-            created.onNext(tweet)
         }
     }
 }
