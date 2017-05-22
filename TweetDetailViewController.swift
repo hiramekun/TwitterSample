@@ -4,11 +4,22 @@
 //
 
 import UIKit
+import RealmSwift
 
 final class TweetDetailViewController: UIViewController {
     
     // MARK: - Properties -
-    let tweetId: String
+    
+    fileprivate let tweetId: String
+    
+    
+    // MARK: - Views -
+    
+    fileprivate lazy var contentLabel: UILabel = {
+        let label = UILabel()
+        label.text = try! Realm().object(ofType: Tweet.self, forPrimaryKey: self.tweetId)?.content
+        return label
+    }()
     
     
     // MARK: - Initializers -
