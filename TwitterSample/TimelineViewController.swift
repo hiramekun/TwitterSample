@@ -27,6 +27,9 @@ final class TimelineViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        tableView.dataSource = self
+        tableView.delegate = self
+        
         return tableView
     }()
     
@@ -63,8 +66,8 @@ extension TimelineViewController {
         
         setupView()
         setupLayout()
-        setupBinding()
-        setupTableViewBinding()
+        setupViewBinding()
+        setupViewModelBinding()
     }
 }
 
@@ -89,18 +92,7 @@ extension TimelineViewController {
         }
     }
     
-    fileprivate func setupTableViewBinding() {
-        let dataSource = TimelineDataSource()
-        viewModel.outputs.tweetVariable
-            .asObservable()
-            .bind(to: tableView.rx.items(dataSource: dataSource))
-            .disposed(by: disposeBag)
-        
-        tableView.dataSource = dataSource
-        tableView.delegate = dataSource
-    }
-    
-    fileprivate func setupBinding() {
+    fileprivate func setupViewBinding() {
         postButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.navigationController?.pushViewController(
@@ -109,7 +101,9 @@ extension TimelineViewController {
                 )
             })
             .disposed(by: disposeBag)
-        
+    }
+    
+    fileprivate func setupViewModelBinding() {
         viewModel.outputs.tweetChanges
             .subscribe(onNext: { [weak self] change in
                 guard let tableView = self?.tableView else { return }
@@ -148,32 +142,27 @@ extension TimelineViewController {
 }
 
 
-final fileprivate class TimelineDataSource: NSObject {
-    
-    // MARK: - Properties -
-    
-    typealias Element = Results<Tweet>
-    fileprivate var itemModels: Element = try! Realm().objects(Tweet.self)
-    fileprivate let selectedIndexPath = PublishSubject<IndexPath>()
-}
+// MARK: - UITableViewDataSource -
 
-
-// MARK: - RxTableViewDataSourceType -
-
-extension TimelineDataSource: RxTableViewDataSourceType {
+extension TimelineViewController: UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, observedEvent: Event<Element>) {
-        UIBindingObserver(UIElement: self) { (dataSource, element) in
-            dataSource.itemModels = element
-            tableView.reloadData()
-        }.on(observedEvent)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.outputs.tweetVariable.value.count
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
+        cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+        return cell
     }
 }
 
 
 // MARK: - UITableViewDelegate -
 
-extension TimelineDataSource: UITableViewDelegate {
+extension TimelineViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -181,28 +170,6 @@ extension TimelineDataSource: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedIndexPath.onNext(indexPath)
-    }
-}
-
-
-// MARK: - UITableViewDataSource -
-
-extension TimelineDataSource: UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemModels.count
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
-        cell.textLabel?.text = itemModels[indexPath.row].content
-        return cell
+        // TODO: implement
     }
 }
