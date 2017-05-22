@@ -27,6 +27,7 @@ final class TimelineViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        tableView.rowHeight = 40
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -163,11 +164,6 @@ extension TimelineViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate -
 
 extension TimelineViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView,
-                   heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
-    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // TODO: implement
