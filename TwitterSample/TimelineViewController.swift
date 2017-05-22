@@ -9,6 +9,10 @@ import RxCocoa
 import SnapKit
 import RealmSwift
 
+fileprivate enum CellIdentifier: String {
+    case uiTableViewCell = "UITableViewCell"
+}
+
 final class TimelineViewController: UIViewController {
     
     // MARK: - Properties -
@@ -19,7 +23,12 @@ final class TimelineViewController: UIViewController {
     
     // MARK: - Views -
     
-    fileprivate lazy var tableView = UITableView()
+    fileprivate lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        return tableView
+    }()
     
     fileprivate lazy var postButton: UIButton = {
         let button = UIButton()
@@ -51,7 +60,6 @@ extension TimelineViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         setupView()
         setupLayout()
@@ -192,7 +200,8 @@ extension TimelineDataSource: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
         cell.textLabel?.text = itemModels[indexPath.row].content
         return cell
     }
