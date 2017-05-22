@@ -175,7 +175,6 @@ extension TimelineDataSource: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedIndexPath.onNext(indexPath)
     }
-    
 }
 
 
