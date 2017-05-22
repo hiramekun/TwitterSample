@@ -101,7 +101,7 @@ extension CreateTweetViewController {
         
         viewModel.outputs.created
             .subscribe(onNext: { [weak self] in
-                self?.navigationController?.popViewController(animated: true)
+                _ = self?.navigationController?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
     }
