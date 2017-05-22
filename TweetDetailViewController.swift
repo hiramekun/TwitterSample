@@ -8,11 +8,14 @@ import UIKit
 final class TweetDetailViewController: UIViewController {
     
     // MARK: - Properties -
+    let tweetId: String
     
     
     // MARK: - Initializers -
     
-    init() {
+    init(tweetId: String) {
+        self.tweetId = tweetId
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -30,7 +33,7 @@ extension TweetDetailViewController {
         super.viewDidLoad()
         
         configure()
-        setupViews()
+        setupView()
         setupLayout()
     }
 }
@@ -44,8 +47,8 @@ extension TweetDetailViewController {
         view.backgroundColor = .white
     }
     
-    fileprivate func setupViews() {
-        
+    fileprivate func setupView() {
+    
     }
     
     fileprivate func setupLayout() {
