@@ -12,11 +12,14 @@ enum RealmChange<T:RealmSwift.Object> {
     case deletions(rows: [Int])
     case insertions(rows: [Int])
     case modifications(rows: [Int])
+    
+    func allResults() throws -> Results<T> {
+        return try Realm().objects(T.self)
+    }
 }
 
 protocol TimelineViewModelOutputs {
     var tweetChanges: BehaviorSubject<RealmChange<Tweet>> { get }
-    var tweetVariable: Variable<Results<Tweet>> { get }
 }
 
 protocol TimelineViewModelType {
@@ -33,10 +36,6 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
     
     
     // MARK: - Outputs -
-    
-    lazy var tweetVariable: Variable<Results<Tweet>> = {
-        return Variable<Results<Tweet>>(self.tweetResults)
-    }()
     
     lazy var tweetChanges: BehaviorSubject<RealmChange<Tweet>> = {
         return BehaviorSubject<RealmChange<Tweet>>(
@@ -62,9 +61,9 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
 extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {
-        token = tweetVariable.value.addNotificationBlock { [weak self] change in
+        token = tweetResults.addNotificationBlock { [weak self] change in
             guard let tweetChanges = self?.tweetChanges,
-                  let tweetResults = self?.tweetVariable.value else { return }
+                  let tweetResults = self?.tweetResults else { return }
             
             switch change {
             case .initial(tweetResults):
@@ -72,8 +71,9 @@ extension TimelineViewModel {
             case .update(tweetResults, let deletions, let insertions, let modifications):
                 if deletions.count > 0 { tweetChanges.onNext(.deletions(rows: deletions)) }
                 if insertions.count > 0 { tweetChanges.onNext(.insertions(rows: insertions)) }
-                if modifications.count > 0 { tweetChanges.onNext(
-                    .modifications(rows: modifications)) }
+                if modifications.count > 0 {
+                    tweetChanges.onNext(.modifications(rows: modifications))
+                }
             case .error(let error):
                 tweetChanges.onError(error)
             default:
