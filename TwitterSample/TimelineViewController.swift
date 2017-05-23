@@ -67,8 +67,8 @@ extension TimelineViewController {
         
         setupView()
         setupLayout()
-        setupViewBinding()
-        setupViewModelBinding()
+        subscribeView()
+        subscribeViewModel()
     }
 }
 
@@ -93,7 +93,7 @@ extension TimelineViewController {
         }
     }
     
-    fileprivate func setupViewBinding() {
+    fileprivate func subscribeView() {
         postButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.navigationController?.pushViewController(
@@ -104,7 +104,7 @@ extension TimelineViewController {
             .disposed(by: disposeBag)
     }
     
-    fileprivate func setupViewModelBinding() {
+    fileprivate func subscribeViewModel() {
         viewModel.outputs.tweetChanges
             .subscribe(onNext: { [weak self] change in
                 guard let tableView = self?.tableView else { return }
