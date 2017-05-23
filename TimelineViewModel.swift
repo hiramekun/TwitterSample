@@ -63,7 +63,8 @@ extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {
         token = tweetVariable.value.addNotificationBlock { [weak self] change in
-            guard let tweetChanges = self?.tweetChanges, let tweetResults = self?.tweetVariable.value else { return }
+            guard let tweetChanges = self?.tweetChanges,
+                  let tweetResults = self?.tweetVariable.value else { return }
             
             switch change {
             case .initial(tweetResults):
@@ -71,7 +72,8 @@ extension TimelineViewModel {
             case .update(tweetResults, let deletions, let insertions, let modifications):
                 if deletions.count > 0 { tweetChanges.onNext(.deletions(rows: deletions)) }
                 if insertions.count > 0 { tweetChanges.onNext(.insertions(rows: insertions)) }
-                if modifications.count > 0 { tweetChanges.onNext(.modifications(rows: modifications)) }
+                if modifications.count > 0 { tweetChanges.onNext(
+                    .modifications(rows: modifications)) }
             case .error(let error):
                 tweetChanges.onError(error)
             default:
