@@ -82,41 +82,31 @@ extension TweetDetailViewModel {
     
     fileprivate func setupBindings() {
         deleteTweet.subscribe(onNext: { [weak self] in
-                self?.executeDeleteTweet()
+                guard let _ = self else { return }
+                try! self!.realm.write {
+                    self!.realm.delete(self!.tweet)
+                }
             })
             .disposed(by: disposeBag)
         
         deleteComment.subscribe(onNext: { [weak self] id in
-                self?.executeDeleteComment(commentID: id)
+                guard let _ = self else { return }
+                try! self!.realm.write {
+                    guard let comment = self!.realm.object(ofType: Comment.self,
+                                                           forPrimaryKey: id) else { return }
+                    self!.realm.delete(comment)
+                }
             })
             .disposed(by: disposeBag)
         
         submit.subscribe(onNext: { [weak self] string in
-                self?.executeCreateComment(content: string)
+                guard let _ = self else { return }
+                try! self!.realm.write {
+                    let comment = Comment()
+                    comment.content = string
+                    self!.tweet.comments.append(comment)
+                }
             })
             .disposed(by: disposeBag)
-    }
-    
-    private func executeDeleteTweet() {
-        try! realm.write {
-            realm.delete(tweet)
-        }
-    }
-    
-    private func executeDeleteComment(commentID: String) {
-        try! realm.write {
-            guard let comment = realm.object(ofType: Comment.self, forPrimaryKey: commentID)
-                else { return }
-            
-            realm.delete(comment)
-        }
-    }
-    
-    private func executeCreateComment(content: String) {
-        try! realm.write {
-            let comment = Comment()
-            comment.content = content
-            tweet.comments.append(comment)
-        }
     }
 }
