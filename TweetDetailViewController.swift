@@ -133,8 +133,10 @@ extension TweetDetailViewController {
             }
             .subscribe(onNext: { [weak self] in
                 guard let unwrappedSelf = self else { return }
+                
                 unwrappedSelf.viewModel.inputs.submit
                     .onNext(unwrappedSelf.inputCommentTextField.text!)
+                unwrappedSelf.inputCommentTextField.text = ""
             })
             .disposed(by: disposeBag)
     }
