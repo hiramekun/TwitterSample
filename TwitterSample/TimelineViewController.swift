@@ -130,8 +130,12 @@ extension TimelineViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CellIdentifier.timelineTableViewCell.rawValue, for: indexPath
         ) as! TimelineTableViewCell
+        
         if indexPath.row < viewModel.outputs.tweetVariable.value.count {
-            cell.tweetContentLabel.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+            let tweet = viewModel.outputs.tweetVariable.value[indexPath.row]
+            cell.tweetContentLabel.text = tweet.content
+            cell.latestCommentLabel.text = tweet.comments
+                .sorted(byKeyPath: "createdAt", ascending: false).first?.content
         }
         return cell
     }
