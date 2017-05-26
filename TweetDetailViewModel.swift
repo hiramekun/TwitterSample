@@ -38,7 +38,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     // MARK: - Inputs -
     
     let submit = PublishSubject<String>()
-    let deletion = PublishSubject<Void>()
+    let delete = PublishSubject<Void>()
     
     
     // MARK: - OutPuts -
@@ -95,13 +95,13 @@ extension TweetDetailViewModel {
     
     private func deleteTweet(tweetId: String) {
         try! realm.write {
-            guard let target = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)
+            guard let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)
                 else {
                 deleteSuccess.onNext(false)
                 return
             }
             
-            realm.delete(target)
+            realm.delete(tweet)
             deleteSuccess.onNext(true)
         }
     }
