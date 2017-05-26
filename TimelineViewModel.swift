@@ -21,18 +21,18 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
     
     var outputs: TimelineViewModelOutputs { return self }
     fileprivate var token: NotificationToken?
+    fileprivate let tweetResults = try! Realm().objects(Tweet.self)
     
     
     // MARK: - Outputs -
     
-    let tweetVariable: Variable<Results<Tweet>> = {
-        return Variable<Results<Tweet>>(try! Realm().objects(Tweet.self))
-    }()
+    let tweetVariable: Variable<Results<Tweet>>
     
     
     // MARK: - Life Cycle Events -
     
     init() {
+        tweetVariable = Variable(tweetResults)
         setupNotificationToken()
     }
     
@@ -48,12 +48,11 @@ extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {
         token = tweetVariable.value.addNotificationBlock { [weak self] change in
-            guard let tweetVariable = self?.tweetVariable,
-                  let tweetResults = self?.tweetVariable.value else { return }
             
+            guard let tweetResults = self?.tweetResults else { return }
             switch change {
             case .initial, .update:
-                tweetVariable.value = tweetResults
+                self?.tweetVariable.value = tweetResults
             default:
                 break
             }
