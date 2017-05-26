@@ -138,6 +138,9 @@ extension TimelineViewController: UITableViewDataSource {
 extension TimelineViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: implement
+        let tweetDetailViewController = TweetDetailViewController(
+            tweetId: viewModel.outputs.tweetVariable.value[indexPath.row].id
+        )
+        navigationController?.pushViewController(tweetDetailViewController, animated: true)
     }
 }
