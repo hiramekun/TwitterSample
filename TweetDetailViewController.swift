@@ -56,6 +56,7 @@ final class TweetDetailViewController: UIViewController {
                            forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
         tableView.rowHeight = 40
         tableView.dataSource = self
+        tableView.delegate = self
         
         return tableView
     }()
@@ -80,6 +81,7 @@ extension TweetDetailViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = editButtonItem
         
         configure()
         setupView()
@@ -153,7 +155,7 @@ extension TweetDetailViewController {
         
         deleteTweetButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.inputs.delete.onNext()
+                self?.viewModel.inputs.deleteTweet.onNext()
             })
             .disposed(by: disposeBag)
     }
@@ -165,7 +167,7 @@ extension TweetDetailViewController {
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.deleteSuccess
+        viewModel.outputs.deleteTweetSuccess
             .subscribe(onNext: { [weak self] isSuccess in
                 if isSuccess {
                     _ = self?.navigationController?.popViewController(animated: true)
@@ -196,5 +198,29 @@ extension TweetDetailViewController: UITableViewDataSource {
             withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
         cell.textLabel?.text = viewModel.outputs.commentsVariable.value[indexPath.row].content
         return cell
+    }
+}
+
+
+// MARK: - UITableViewDelegate -
+
+extension TweetDetailViewController: UITableViewDelegate {
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        commentsTableView.isEditing = editing
+    }
+    
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   commit editingStyle: UITableViewCellEditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        viewModel.inputs.deleteComment.onNext(
+            viewModel.outputs.commentsVariable.value[indexPath.row].id
+        )
     }
 }
