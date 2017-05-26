@@ -12,7 +12,7 @@ protocol TweetDetailViewModelInputs {
 }
 
 protocol TweetDetailViewModelOutputs {
-    var commentsVariable: Variable<List<Comment>?> { get }
+    var commentsVariable: Variable<Results<Comment>?> { get }
 }
 
 protocol TweetDetailViewModelType {
@@ -28,7 +28,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     var outputs: TweetDetailViewModelOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
     fileprivate var token: NotificationToken?
-    fileprivate let comments: List<Comment>?
+    fileprivate let comments: Results<Comment>?
     
     
     // MARK: - Inputs -
@@ -38,14 +38,15 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     
     // MARK: - OutPuts -
     
-    let commentsVariable: Variable<List<Comment>?>
+    let commentsVariable: Variable<Results<Comment>?>
     
     
     // MARK: - Initializers -
     
     init(tweetId: String) {
-        comments = try! Realm().object(ofType: Tweet.self, forPrimaryKey: tweetId)?.comments
-        commentsVariable = Variable<List<Comment>?>(comments)
+        comments = try! Realm().object(ofType: Tweet.self, forPrimaryKey: tweetId)?
+            .comments.sorted(byKeyPath: "createdAt", ascending: true)
+        commentsVariable = Variable<Results<Comment>?>(comments)
         setupNotificationToken()
         setupBindings(tweetId: tweetId)
     }
