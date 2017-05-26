@@ -46,6 +46,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     init(tweetId: String) {
         comments = try! Realm().object(ofType: Tweet.self, forPrimaryKey: tweetId)?.comments
         commentsVariable = Variable<List<Comment>?>(comments)
+        setupNotificationToken()
         setupBindings(tweetId: tweetId)
     }
     

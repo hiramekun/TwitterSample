@@ -80,6 +80,8 @@ extension TweetDetailViewController {
         configure()
         setupView()
         setupLayout()
+        subscribeView()
+        subscribeViewModel()
     }
 }
 
@@ -139,9 +141,9 @@ extension TweetDetailViewController {
     
     fileprivate func subscribeViewModel() {
         viewModel.outputs.commentsVariable.asObservable()
-            .subscribe { [weak self] in
+            .subscribe(onNext: { [weak self] _ in
                 self?.commentsTableView.reloadData()
-            }
+            })
             .disposed(by: disposeBag)
     }
 }
@@ -152,15 +154,15 @@ extension TweetDetailViewController {
 extension TweetDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // TODO: Implement
-        return 0
+        guard let comments = viewModel.outputs.commentsVariable.value else { return 0 }
+        return comments.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // TODO: Implement
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
+        cell.textLabel?.text = viewModel.outputs.commentsVariable.value?[indexPath.row].content
         return cell
     }
 }
