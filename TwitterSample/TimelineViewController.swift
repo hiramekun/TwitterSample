@@ -127,7 +127,9 @@ extension TimelineViewController: UITableViewDataSource {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
-        cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+        if indexPath.row < viewModel.outputs.tweetVariable.value.count {
+            cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+        }
         return cell
     }
 }
