@@ -7,6 +7,10 @@ import UIKit
 import RealmSwift
 import SnapKit
 
+fileprivate enum CellIdentifier: String {
+    case uiTableViewCell = "UITableViewCell"
+}
+
 final class TweetDetailViewController: UIViewController {
     
     // MARK: - Properties -
@@ -23,6 +27,16 @@ final class TweetDetailViewController: UIViewController {
         label.text = try! Realm().object(ofType: Tweet.self, forPrimaryKey: self.tweetId)?.content
         label.textAlignment = .center
         return label
+    }()
+    
+    fileprivate lazy var commentsTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        tableView.rowHeight = 40
+        tableView.dataSource = self
+        
+        return tableView
     }()
     
     
@@ -64,6 +78,7 @@ extension TweetDetailViewController {
     
     fileprivate func setupView() {
         view.addSubview(contentLabel)
+        view.addSubview(commentsTableView)
     }
     
     fileprivate func setupLayout() {
@@ -71,5 +86,29 @@ extension TweetDetailViewController {
             make.center.equalTo(view)
             make.left.right.equalTo(view).inset(16)
         }
+        
+        commentsTableView.snp.makeConstraints { make in
+            make.left.right.bottom.equalTo(view)
+            make.top.equalTo(contentLabel.snp.bottom).offset(32)
+        }
+    }
+}
+
+
+// MARK: - UITableViewDataSource -
+
+extension TweetDetailViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // TODO: Implement
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // TODO: Implement
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
+        return cell
     }
 }
