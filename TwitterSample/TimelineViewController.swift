@@ -127,7 +127,9 @@ extension TimelineViewController: UITableViewDataSource {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
-        cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+        if indexPath.row < viewModel.outputs.tweetVariable.value.count {
+            cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+        }
         return cell
     }
 }
@@ -138,8 +140,9 @@ extension TimelineViewController: UITableViewDataSource {
 extension TimelineViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let tweetID = viewModel.outputs.tweetVariable.value[indexPath.row].id
         let tweetDetailViewController = TweetDetailViewController(
-            tweetId: viewModel.outputs.tweetVariable.value[indexPath.row].id
+            viewModel: TweetDetailViewModel(tweetID: tweetID)
         )
         navigationController?.pushViewController(tweetDetailViewController, animated: true)
     }

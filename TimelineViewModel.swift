@@ -22,6 +22,7 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
     var outputs: TimelineViewModelOutputs { return self }
     fileprivate var token: NotificationToken?
     fileprivate let tweetResults = try! Realm().objects(Tweet.self)
+        .sorted(byKeyPath: "createdAt", ascending: false)
     
     
     // MARK: - Outputs -
