@@ -148,15 +148,14 @@ extension TimelineViewController {
 extension TimelineViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return try! viewModel.outputs.tweetChanges.value().allResults().count
+        return viewModel.outputs.tweetVariable.value.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
-        cell.textLabel?.text = try! viewModel.outputs.tweetChanges.value()
-            .allResults()[indexPath.row].content
+        cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
         return cell
     }
 }
