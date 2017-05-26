@@ -156,7 +156,6 @@ extension TweetDetailViewController {
         deleteTweetButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.viewModel.inputs.deletion.onNext()
-                _ = self?.navigationController?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
     }
@@ -165,6 +164,20 @@ extension TweetDetailViewController {
         viewModel.outputs.commentsVariable.asObservable()
             .subscribe(onNext: { [weak self] _ in
                 self?.commentsTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.deleteSuccess
+            .subscribe(onNext: { [weak self] isSuccess in
+                if isSuccess {
+                    _ = self?.navigationController?.popViewController(animated: true)
+                }
+                else {
+                    let alertView = UIAlertController(title: "削除失敗", message: "ツイートの削除に失敗しました",
+                                                      preferredStyle: .alert)
+                    alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
+                    self?.present(alertView, animated: true)
+                }
             })
             .disposed(by: disposeBag)
     }
