@@ -50,13 +50,13 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     
     // MARK: - Initializers -
     
-    init(tweetId: String) {
-        let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)!
+    init(tweetID: String) {
+        let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetID)!
         tweetVariable = Variable<Tweet>(tweet)
         comments = tweet.comments.sorted(byKeyPath: "createdAt", ascending: true)
         commentsVariable = Variable<Results<Comment>>(comments)
         setupNotificationToken()
-        setupBindings(tweetId: tweetId)
+        setupBindings(tweetId: tweetID)
     }
     
     deinit {
