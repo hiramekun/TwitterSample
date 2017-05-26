@@ -105,39 +105,11 @@ extension TimelineViewController {
     }
     
     fileprivate func subscribeViewModel() {
-        viewModel.outputs.tweetChanges
-            .subscribe(onNext: { [weak self] change in
+        viewModel.outputs.tweetVariable.asObservable()
+            .subscribe { [weak self] _ in
                 guard let tableView = self?.tableView else { return }
-                
-                switch change {
-                case .initial(_):
-                    tableView.reloadData()
-                
-                case .deletions(let rows):
-                    tableView.beginUpdates()
-                    tableView.deleteRows(
-                        at: rows.map { IndexPath(row: $0, section: 0) },
-                        with: .fade
-                    )
-                    tableView.endUpdates()
-                
-                case .insertions(let rows):
-                    tableView.beginUpdates()
-                    tableView.insertRows(
-                        at: rows.map { IndexPath(row: $0, section: 0) },
-                        with: .fade
-                    )
-                    tableView.endUpdates()
-                
-                case .modifications(let rows):
-                    tableView.beginUpdates()
-                    tableView.reloadRows(
-                        at: rows.map { IndexPath(row: $0, section: 0) },
-                        with: .none
-                    )
-                    tableView.endUpdates()
-                }
-            })
+                tableView.reloadData()
+            }
             .disposed(by: disposeBag)
     }
 }
