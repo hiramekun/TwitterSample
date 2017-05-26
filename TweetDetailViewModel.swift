@@ -9,6 +9,7 @@ import RealmSwift
 
 protocol TweetDetailViewModelInputs {
     var submit: PublishSubject<String> { get }
+    var deletion: PublishSubject<Void> { get }
 }
 
 protocol TweetDetailViewModelOutputs {
@@ -26,6 +27,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     
     var inputs: TweetDetailViewModelInputs { return self }
     var outputs: TweetDetailViewModelOutputs { return self }
+    fileprivate let realm = try! Realm()
     fileprivate let disposeBag = DisposeBag()
     fileprivate var token: NotificationToken?
     fileprivate let comments: Results<Comment>?
@@ -34,6 +36,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     // MARK: - Inputs -
     
     let submit = PublishSubject<String>()
+    let deletion = PublishSubject<Void>()
     
     
     // MARK: - OutPuts -
@@ -44,7 +47,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     // MARK: - Initializers -
     
     init(tweetId: String) {
-        comments = try! Realm().object(ofType: Tweet.self, forPrimaryKey: tweetId)?
+        comments = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)?
             .comments.sorted(byKeyPath: "createdAt", ascending: true)
         commentsVariable = Variable<Results<Comment>?>(comments)
         setupNotificationToken()
@@ -75,14 +78,27 @@ extension TweetDetailViewModel {
     }
     
     fileprivate func setupBindings(tweetId: String) {
+        deletion.subscribe(onNext: { [weak self] in
+                self?.deleteTweet(tweetId: tweetId)
+            })
+            .disposed(by: disposeBag)
+        
         submit.subscribe(onNext: { [weak self] string in
                 self?.createComment(content: string, tweetId: tweetId)
             })
             .disposed(by: disposeBag)
     }
     
+    private func deleteTweet(tweetId: String) {
+        try! realm.write {
+            guard let target = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)
+                else { return }
+            
+            realm.delete(target)
+        }
+    }
+    
     private func createComment(content: String, tweetId: String) {
-        let realm = try! Realm()
         try! realm.write {
             let comment = Comment()
             comment.content = content

@@ -45,6 +45,12 @@ final class TweetDetailViewController: UIViewController {
         return button
     }()
     
+    fileprivate lazy var deleteTweetButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .red
+        return button
+    }()
+    
     fileprivate lazy var commentsTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self,
@@ -98,6 +104,7 @@ extension TweetDetailViewController {
         view.addSubview(contentLabel)
         view.addSubview(inputCommentTextField)
         view.addSubview(submitCommentButton)
+        view.addSubview(deleteTweetButton)
         view.addSubview(commentsTableView)
     }
     
@@ -120,6 +127,12 @@ extension TweetDetailViewController {
             make.width.height.equalTo(32)
         }
         
+        deleteTweetButton.snp.makeConstraints { make in
+            make.left.equalTo(submitCommentButton.snp.right).offset(12)
+            make.centerY.equalTo(submitCommentButton)
+            make.width.height.equalTo(32)
+        }
+        
         commentsTableView.snp.makeConstraints { make in
             make.left.right.bottom.equalTo(view)
             make.top.equalTo(inputCommentTextField.snp.bottom).offset(32)
@@ -137,6 +150,13 @@ extension TweetDetailViewController {
                 unwrappedSelf.viewModel.inputs.submit
                     .onNext(unwrappedSelf.inputCommentTextField.text!)
                 unwrappedSelf.inputCommentTextField.text = ""
+            })
+            .disposed(by: disposeBag)
+        
+        deleteTweetButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.inputs.deletion.onNext()
+                _ = self?.navigationController?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
     }
