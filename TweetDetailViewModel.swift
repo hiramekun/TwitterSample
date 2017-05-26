@@ -16,7 +16,6 @@ protocol TweetDetailViewModelInputs {
 protocol TweetDetailViewModelOutputs {
     var commentsVariable: Variable<Results<Comment>> { get }
     var tweet: Tweet { get }
-    var deleteTweetSuccess: PublishSubject<Bool> { get }
 }
 
 protocol TweetDetailViewModelType {
@@ -47,7 +46,6 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     // MARK: - OutPuts -
     
     let commentsVariable: Variable<Results<Comment>>
-    let deleteTweetSuccess = PublishSubject<Bool>()
     
     
     // MARK: - Initializers -
@@ -102,7 +100,6 @@ extension TweetDetailViewModel {
     private func executeDeleteTweet() {
         try! realm.write {
             realm.delete(tweet)
-            deleteTweetSuccess.onNext(true)
         }
     }
     

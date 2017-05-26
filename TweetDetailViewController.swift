@@ -178,20 +178,6 @@ extension TweetDetailViewController {
                 self?.commentsTableView.reloadData()
             })
             .disposed(by: disposeBag)
-        
-        viewModel.outputs.deleteTweetSuccess
-            .subscribe(onNext: { [weak self] isSuccess in
-                if isSuccess {
-                    _ = self?.navigationController?.popViewController(animated: true)
-                }
-                else {
-                    let alertView = UIAlertController(title: "削除失敗", message: "ツイートの削除に失敗しました",
-                                                      preferredStyle: .alert)
-                    alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
-                    self?.present(alertView, animated: true)
-                }
-            })
-            .disposed(by: disposeBag)
     }
 }
 
