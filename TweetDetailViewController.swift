@@ -168,6 +168,7 @@ extension TweetDetailViewController {
         deleteTweetButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.viewModel.inputs.deleteTweet.onNext()
+                _ = self?.navigationController?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
     }
