@@ -13,7 +13,8 @@ protocol TweetDetailViewModelInputs {
 }
 
 protocol TweetDetailViewModelOutputs {
-    var commentsVariable: Variable<Results<Comment>?> { get }
+    var commentsVariable: Variable<Results<Comment>> { get }
+    var tweetVariable: Variable<Tweet> { get }
     var deleteSuccess: PublishSubject<Bool> { get }
 }
 
@@ -31,7 +32,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     fileprivate let realm = try! Realm()
     fileprivate let disposeBag = DisposeBag()
     fileprivate var token: NotificationToken?
-    fileprivate let comments: Results<Comment>?
+    fileprivate let comments: Results<Comment>
     
     
     // MARK: - Inputs -
@@ -42,16 +43,18 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     
     // MARK: - OutPuts -
     
-    let commentsVariable: Variable<Results<Comment>?>
+    let commentsVariable: Variable<Results<Comment>>
+    let tweetVariable: Variable<Tweet>
     let deleteSuccess = PublishSubject<Bool>()
     
     
     // MARK: - Initializers -
     
     init(tweetId: String) {
-        comments = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)?
-            .comments.sorted(byKeyPath: "createdAt", ascending: true)
-        commentsVariable = Variable<Results<Comment>?>(comments)
+        let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)!
+        tweetVariable = Variable<Tweet>(tweet)
+        comments = tweet.comments.sorted(byKeyPath: "createdAt", ascending: true)
+        commentsVariable = Variable<Results<Comment>>(comments)
         setupNotificationToken()
         setupBindings(tweetId: tweetId)
     }
@@ -67,8 +70,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
 extension TweetDetailViewModel {
     
     fileprivate func setupNotificationToken() {
-        token = comments?.addNotificationBlock { [weak self] change in
-            
+        token = comments.addNotificationBlock { [weak self] change in
             guard let comments = self?.comments else { return }
             switch change {
             case .initial, .update:

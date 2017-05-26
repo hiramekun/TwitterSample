@@ -17,7 +17,6 @@ final class TweetDetailViewController: UIViewController {
     
     // MARK: - Properties -
     
-    fileprivate let tweetId: String
     fileprivate let disposeBag = DisposeBag()
     fileprivate let viewModel: TweetDetailViewModelType
     
@@ -28,7 +27,7 @@ final class TweetDetailViewController: UIViewController {
         let label = UILabel()
         label.backgroundColor = .lightGray
         label.numberOfLines = 0
-        label.text = try! Realm().object(ofType: Tweet.self, forPrimaryKey: self.tweetId)?.content
+        label.text = self.viewModel.outputs.tweetVariable.value.content
         label.textAlignment = .center
         return label
     }()
@@ -63,8 +62,7 @@ final class TweetDetailViewController: UIViewController {
     
     // MARK: - Initializers -
     
-    init(tweetId: String, viewModel: TweetDetailViewModelType) {
-        self.tweetId = tweetId
+    init(viewModel: TweetDetailViewModelType) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
@@ -189,15 +187,14 @@ extension TweetDetailViewController {
 extension TweetDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let comments = viewModel.outputs.commentsVariable.value else { return 0 }
-        return comments.count
+        return viewModel.outputs.commentsVariable.value.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
-        cell.textLabel?.text = viewModel.outputs.commentsVariable.value?[indexPath.row].content
+        cell.textLabel?.text = viewModel.outputs.commentsVariable.value[indexPath.row].content
         return cell
     }
 }
