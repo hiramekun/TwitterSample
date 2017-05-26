@@ -4,18 +4,19 @@
 //
 
 import UIKit
+import SnapKit
 
 final class TimelineTableViewCell: UITableViewCell {
     
     // MARK: - Views -
     
-    fileprivate lazy var tweetContentLabel: UILabel = {
+    lazy var tweetContentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     
-    fileprivate lazy var latestCommentLabel: UILabel = {
+    lazy var latestCommentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         return label
@@ -26,6 +27,9 @@ final class TimelineTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        setupView()
+        setupLayout()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -37,4 +41,22 @@ final class TimelineTableViewCell: UITableViewCell {
 // MARK: - Setup -
 
 extension TimelineTableViewCell {
+    
+    fileprivate func setupView() {
+        addSubview(tweetContentLabel)
+        addSubview(latestCommentLabel)
+    }
+    
+    fileprivate func setupLayout() {
+        tweetContentLabel.snp.makeConstraints { make in
+            make.left.top.right.equalTo(self).inset(4)
+            make.height.equalTo(18)
+        }
+        
+        latestCommentLabel.snp.makeConstraints { make in
+            make.top.equalTo(tweetContentLabel.snp.bottom).offset(4)
+            make.left.right.bottom.equalTo(self).inset(4)
+            make.height.equalTo(14)
+        }
+    }
 }
