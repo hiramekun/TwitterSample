@@ -25,6 +25,7 @@
 		CC083970698EABC7D1608586 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083C620C4F8063898BB8D3 /* Tweet.swift */; };
 		CC083A0E2488DA68C8624B20 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0838924D3CC479E672FD8D /* Comment.swift */; };
 		CC083BBFA0C04DCBED591BF7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC083CA962BF5696F44D6B76 /* LaunchScreen.storyboard */; };
+		CC083EA9CDA655CC39EDC7ED /* TweetDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC083D835C073238F5BA38B2 /* TweetDetailViewModel.swift */; };
 		CC083EE7699CCD20F3191860 /* CreateTweetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0839F9CCE59F37B1FE1CBB /* CreateTweetViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		CC083BB0583F33185BC8BC3C /* TwitterSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwitterSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC083C53FAD1B8E05AFF1DBC /* CreateTweetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTweetViewController.swift; sourceTree = SOURCE_ROOT; };
 		CC083C620C4F8063898BB8D3 /* Tweet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
+		CC083D835C073238F5BA38B2 /* TweetDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetDetailViewModel.swift; sourceTree = SOURCE_ROOT; };
 		CC083E79969803F205FCE3D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CC083EA37FC65A6703CF149F /* TwitterSampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterSampleTests.swift; sourceTree = "<group>"; };
 		CC083EE683B1491AD2C47109 /* TimelineViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = SOURCE_ROOT; };
@@ -184,6 +186,7 @@
 			children = (
 				CC083EE683B1491AD2C47109 /* TimelineViewModel.swift */,
 				CC0839F9CCE59F37B1FE1CBB /* CreateTweetViewModel.swift */,
+				CC083D835C073238F5BA38B2 /* TweetDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				CC083954EF21107A17B1D599 /* TimelineViewModel.swift in Sources */,
 				CC083EE7699CCD20F3191860 /* CreateTweetViewModel.swift in Sources */,
 				CC083516508BED0E103E55A2 /* TweetDetailViewController.swift in Sources */,
+				CC083EA9CDA655CC39EDC7ED /* TweetDetailViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
