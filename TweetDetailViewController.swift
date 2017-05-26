@@ -27,7 +27,7 @@ final class TweetDetailViewController: UIViewController {
         let label = UILabel()
         label.backgroundColor = .lightGray
         label.numberOfLines = 0
-        label.text = self.viewModel.outputs.tweetVariable.value.content
+        label.text = self.viewModel.outputs.tweet.content
         label.textAlignment = .center
         return label
     }()
@@ -81,6 +81,7 @@ final class TweetDetailViewController: UIViewController {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        
         commentsTableView.isEditing = editing
     }
 }

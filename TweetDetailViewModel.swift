@@ -15,7 +15,7 @@ protocol TweetDetailViewModelInputs {
 
 protocol TweetDetailViewModelOutputs {
     var commentsVariable: Variable<Results<Comment>> { get }
-    var tweetVariable: Variable<Tweet> { get }
+    var tweet: Tweet { get }
     var deleteTweetSuccess: PublishSubject<Bool> { get }
 }
 
@@ -30,6 +30,7 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     
     var inputs: TweetDetailViewModelInputs { return self }
     var outputs: TweetDetailViewModelOutputs { return self }
+    let tweet: Tweet
     fileprivate let realm = try! Realm()
     fileprivate let disposeBag = DisposeBag()
     fileprivate var token: NotificationToken?
@@ -46,19 +47,17 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     // MARK: - OutPuts -
     
     let commentsVariable: Variable<Results<Comment>>
-    let tweetVariable: Variable<Tweet>
     let deleteTweetSuccess = PublishSubject<Bool>()
     
     
     // MARK: - Initializers -
     
     init(tweetID: String) {
-        let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetID)!
-        tweetVariable = Variable<Tweet>(tweet)
+        tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetID)!
         comments = tweet.comments.sorted(byKeyPath: "createdAt", ascending: true)
         commentsVariable = Variable<Results<Comment>>(comments)
         setupNotificationToken()
-        setupBindings(tweetID: tweetID)
+        setupBindings()
     }
     
     deinit {
@@ -83,37 +82,31 @@ extension TweetDetailViewModel {
         }
     }
     
-    fileprivate func setupBindings(tweetID: String) {
+    fileprivate func setupBindings() {
         deleteTweet.subscribe(onNext: { [weak self] in
-                self?.deleteTweet(tweetID: tweetID)
+                self?.executeDeleteTweet()
             })
             .disposed(by: disposeBag)
         
         deleteComment.subscribe(onNext: { [weak self] id in
-                self?.deleteComment(commentID: id)
+                self?.executeDeleteComment(commentID: id)
             })
             .disposed(by: disposeBag)
         
         submit.subscribe(onNext: { [weak self] string in
-                self?.createComment(content: string, tweetID: tweetID)
+                self?.executeCreateComment(content: string)
             })
             .disposed(by: disposeBag)
     }
     
-    private func deleteTweet(tweetID: String) {
+    private func executeDeleteTweet() {
         try! realm.write {
-            guard let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetID)
-                else {
-                deleteTweetSuccess.onNext(false)
-                return
-            }
-            
             realm.delete(tweet)
             deleteTweetSuccess.onNext(true)
         }
     }
     
-    private func deleteComment(commentID: String) {
+    private func executeDeleteComment(commentID: String) {
         try! realm.write {
             guard let comment = realm.object(ofType: Comment.self, forPrimaryKey: commentID)
                 else { return }
@@ -122,11 +115,11 @@ extension TweetDetailViewModel {
         }
     }
     
-    private func createComment(content: String, tweetID: String) {
+    private func executeCreateComment(content: String) {
         try! realm.write {
             let comment = Comment()
             comment.content = content
-            realm.object(ofType: Tweet.self, forPrimaryKey: tweetID)?.comments.append(comment)
+            tweet.comments.append(comment)
         }
     }
 }
