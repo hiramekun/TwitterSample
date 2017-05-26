@@ -29,6 +29,12 @@ final class TweetDetailViewController: UIViewController {
         return label
     }()
     
+    fileprivate lazy var inputCommentTextField: UITextField = {
+        let textField = UITextField()
+        textField.backgroundColor = .lightGray
+        return textField
+    }()
+    
     fileprivate lazy var commentsTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self,
@@ -38,8 +44,7 @@ final class TweetDetailViewController: UIViewController {
         
         return tableView
     }()
-    
-    
+   
     // MARK: - Initializers -
     
     init(tweetId: String) {
@@ -78,6 +83,7 @@ extension TweetDetailViewController {
     
     fileprivate func setupView() {
         view.addSubview(contentLabel)
+        view.addSubview(inputCommentTextField)
         view.addSubview(commentsTableView)
     }
     
@@ -87,9 +93,16 @@ extension TweetDetailViewController {
             make.left.right.equalTo(view).inset(16)
         }
         
+        inputCommentTextField.snp.makeConstraints { make in
+            make.centerX.equalTo(view)
+            make.top.equalTo(contentLabel.snp.bottom).offset(16)
+            make.width.equalTo(200)
+            make.height.equalTo(32)
+        }
+        
         commentsTableView.snp.makeConstraints { make in
             make.left.right.bottom.equalTo(view)
-            make.top.equalTo(contentLabel.snp.bottom).offset(32)
+            make.top.equalTo(inputCommentTextField.snp.bottom).offset(32)
         }
     }
 }
