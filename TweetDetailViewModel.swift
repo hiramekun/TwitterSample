@@ -9,7 +9,7 @@ import RealmSwift
 
 protocol TweetDetailViewModelInputs {
     var submit: PublishSubject<String> { get }
-    var deletion: PublishSubject<Void> { get }
+    var delete: PublishSubject<Void> { get }
 }
 
 protocol TweetDetailViewModelOutputs {
@@ -82,7 +82,7 @@ extension TweetDetailViewModel {
     }
     
     fileprivate func setupBindings(tweetId: String) {
-        deletion.subscribe(onNext: { [weak self] in
+        delete.subscribe(onNext: { [weak self] in
                 self?.deleteTweet(tweetId: tweetId)
             })
             .disposed(by: disposeBag)

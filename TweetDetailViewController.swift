@@ -32,7 +32,7 @@ final class TweetDetailViewController: UIViewController {
         return label
     }()
     
-    fileprivate lazy var inputCommentTextField: UITextField = {
+    fileprivate lazy var commentTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .lightGray
         return textField
@@ -100,7 +100,7 @@ extension TweetDetailViewController {
     
     fileprivate func setupView() {
         view.addSubview(contentLabel)
-        view.addSubview(inputCommentTextField)
+        view.addSubview(commentTextField)
         view.addSubview(submitCommentButton)
         view.addSubview(deleteTweetButton)
         view.addSubview(commentsTableView)
@@ -112,7 +112,7 @@ extension TweetDetailViewController {
             make.left.right.equalTo(view).inset(16)
         }
         
-        inputCommentTextField.snp.makeConstraints { make in
+        commentTextField.snp.makeConstraints { make in
             make.centerX.equalTo(view)
             make.top.equalTo(contentLabel.snp.bottom).offset(16)
             make.width.equalTo(200)
@@ -120,8 +120,8 @@ extension TweetDetailViewController {
         }
         
         submitCommentButton.snp.makeConstraints { make in
-            make.left.equalTo(inputCommentTextField.snp.right).offset(12)
-            make.centerY.equalTo(inputCommentTextField)
+            make.left.equalTo(commentTextField.snp.right).offset(12)
+            make.centerY.equalTo(commentTextField)
             make.width.height.equalTo(32)
         }
         
@@ -133,27 +133,27 @@ extension TweetDetailViewController {
         
         commentsTableView.snp.makeConstraints { make in
             make.left.right.bottom.equalTo(view)
-            make.top.equalTo(inputCommentTextField.snp.bottom).offset(32)
+            make.top.equalTo(commentTextField.snp.bottom).offset(32)
         }
     }
     
     fileprivate func subscribeView() {
         submitCommentButton.rx.tap
             .filter { [weak self] in
-                self?.inputCommentTextField.text?.isEmpty == false
+                self?.commentTextField.text?.isEmpty == false
             }
             .subscribe(onNext: { [weak self] in
                 guard let unwrappedSelf = self else { return }
                 
                 unwrappedSelf.viewModel.inputs.submit
-                    .onNext(unwrappedSelf.inputCommentTextField.text!)
-                unwrappedSelf.inputCommentTextField.text = ""
+                    .onNext(unwrappedSelf.commentTextField.text!)
+                unwrappedSelf.commentTextField.text = ""
             })
             .disposed(by: disposeBag)
         
         deleteTweetButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.inputs.deletion.onNext()
+                self?.viewModel.inputs.delete.onNext()
             })
             .disposed(by: disposeBag)
     }
