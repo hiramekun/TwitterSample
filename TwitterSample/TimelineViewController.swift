@@ -7,18 +7,32 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import RealmSwift
+
+fileprivate enum CellIdentifier: String {
+    case uiTableViewCell = "UITableViewCell"
+}
 
 final class TimelineViewController: UIViewController {
     
     // MARK: - Properties -
     
     fileprivate let disposeBag = DisposeBag()
-    fileprivate let timelineViewModelType: TimelineViewModelType
+    fileprivate let viewModel: TimelineViewModelType
     
     
     // MARK: - Views -
     
-    fileprivate lazy var tableView = UITableView()
+    fileprivate lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        tableView.rowHeight = 40
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        return tableView
+    }()
     
     fileprivate lazy var postButton: UIButton = {
         let button = UIButton()
@@ -33,7 +47,7 @@ final class TimelineViewController: UIViewController {
     // MARK: - Initializers -
     
     init(viewModel: TimelineViewModelType) {
-        timelineViewModelType = viewModel
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -53,7 +67,8 @@ extension TimelineViewController {
         
         setupView()
         setupLayout()
-        setupBinding()
+        subscribeView()
+        subscribeViewModel()
     }
 }
 
@@ -78,7 +93,7 @@ extension TimelineViewController {
         }
     }
     
-    fileprivate func setupBinding() {
+    fileprivate func subscribeView() {
         postButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 self?.navigationController?.pushViewController(
@@ -87,40 +102,42 @@ extension TimelineViewController {
                 )
             })
             .disposed(by: disposeBag)
-        
-        timelineViewModelType.outputs.tweets
-            .subscribe(onNext: { [weak self] change in
+    }
+    
+    fileprivate func subscribeViewModel() {
+        viewModel.outputs.tweetVariable.asObservable()
+            .subscribe { [weak self] _ in
                 guard let tableView = self?.tableView else { return }
-                
-                switch change {
-                case .initial(_):
-                    tableView.reloadData()
-                
-                case .deletions(let rows):
-                    tableView.beginUpdates()
-                    tableView.deleteRows(
-                        at: rows.map { IndexPath(row: $0, section: 0) },
-                        with: .fade
-                    )
-                    tableView.endUpdates()
-                
-                case .insertions(let rows):
-                    tableView.beginUpdates()
-                    tableView.insertRows(
-                        at: rows.map { IndexPath(row: $0, section: 0) },
-                        with: .fade
-                    )
-                    tableView.endUpdates()
-                
-                case .modifications(let rows):
-                    tableView.beginUpdates()
-                    tableView.reloadRows(
-                        at: rows.map { IndexPath(row: $0, section: 0) },
-                        with: .none
-                    )
-                    tableView.endUpdates()
-                }
-            })
+                tableView.reloadData()
+            }
             .disposed(by: disposeBag)
+    }
+}
+
+
+// MARK: - UITableViewDataSource -
+
+extension TimelineViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.outputs.tweetVariable.value.count
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
+        cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+        return cell
+    }
+}
+
+
+// MARK: - UITableViewDelegate -
+
+extension TimelineViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // TODO: implement
     }
 }

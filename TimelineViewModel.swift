@@ -7,15 +7,8 @@ import Foundation
 import RealmSwift
 import RxSwift
 
-enum RealmChange<T:RealmSwift.Object> {
-    case initial(results: Results<T>)
-    case deletions(rows: [Int])
-    case insertions(rows: [Int])
-    case modifications(rows: [Int])
-}
-
 protocol TimelineViewModelOutputs {
-    var tweets: BehaviorSubject<RealmChange<Tweet>> { get }
+    var tweetVariable: Variable<Results<Tweet>> { get }
 }
 
 protocol TimelineViewModelType {
@@ -33,16 +26,13 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
     
     // MARK: - Outputs -
     
-    lazy var tweets: BehaviorSubject<RealmChange<Tweet>> = {
-        return BehaviorSubject<RealmChange<Tweet>>(
-            value: .initial(results: self.tweetResults)
-        )
-    }()
+    let tweetVariable: Variable<Results<Tweet>>
     
     
     // MARK: - Life Cycle Events -
     
     init() {
+        tweetVariable = Variable(tweetResults)
         setupNotificationToken()
     }
     
@@ -57,18 +47,12 @@ final class TimelineViewModel: TimelineViewModelType, TimelineViewModelOutputs {
 extension TimelineViewModel {
     
     fileprivate func setupNotificationToken() {
-        token = tweetResults.addNotificationBlock { [weak self] change in
-            guard let tweets = self?.tweets, let results = self?.tweetResults else { return }
+        token = tweetVariable.value.addNotificationBlock { [weak self] change in
             
+            guard let tweetResults = self?.tweetResults else { return }
             switch change {
-            case .initial(results):
-                tweets.onNext(.initial(results: results))
-            case .update(results, let deletions, let insertions, let modifications):
-                tweets.onNext(.deletions(rows: deletions))
-                tweets.onNext(.insertions(rows: insertions))
-                tweets.onNext(.modifications(rows: modifications))
-            case .error(let error):
-                tweets.onError(error)
+            case .initial, .update:
+                self?.tweetVariable.value = tweetResults
             default:
                 break
             }
