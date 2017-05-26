@@ -5,6 +5,7 @@
 
 import UIKit
 import RealmSwift
+import SnapKit
 
 final class TweetDetailViewController: UIViewController {
     
@@ -59,10 +60,13 @@ extension TweetDetailViewController {
     }
     
     fileprivate func setupView() {
-    
+        view.addSubview(contentLabel)
     }
     
     fileprivate func setupLayout() {
-        
+        contentLabel.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.left.right.equalTo(view).inset(16)
+        }
     }
 }
