@@ -52,14 +52,17 @@ final class TweetDetailViewController: UIViewController {
     
     fileprivate lazy var commentsTableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self,
-                           forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        tableView.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue
+        )
         tableView.rowHeight = 40
         tableView.dataSource = self
         tableView.delegate = self
         
         return tableView
     }()
+    
     
     // MARK: - Initializers -
     
@@ -71,6 +74,14 @@ final class TweetDetailViewController: UIViewController {
     
     required init(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    
+    // MARK: - Override Methods -
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        commentsTableView.isEditing = editing
     }
 }
 
@@ -195,7 +206,8 @@ extension TweetDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
+            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath
+        )
         cell.textLabel?.text = viewModel.outputs.commentsVariable.value[indexPath.row].content
         return cell
     }
@@ -205,12 +217,6 @@ extension TweetDetailViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate -
 
 extension TweetDetailViewController: UITableViewDelegate {
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        commentsTableView.isEditing = editing
-    }
-    
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
