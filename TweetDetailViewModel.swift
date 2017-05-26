@@ -1,5 +1,4 @@
-//
-// Created by Takaaki Hirano on 2017/05/26.
+// // Created by Takaaki Hirano on 2017/05/26.
 // Copyright (c) 2017 hiramekun. All rights reserved.
 //
 
@@ -13,7 +12,7 @@ protocol TweetDetailViewModelInputs {
 }
 
 protocol TweetDetailViewModelOutputs {
-    var created: PublishSubject<Void> { get }
+    var commentsVariable: Variable<List<Comment>?> { get }
 }
 
 protocol TweetDetailViewModelType {
@@ -28,6 +27,9 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     var inputs: TweetDetailViewModelInputs { return self }
     var outputs: TweetDetailViewModelOutputs { return self }
     fileprivate let disposeBag = DisposeBag()
+    fileprivate var token: NotificationToken?
+    fileprivate let comments: List<Comment>?
+    
     
     // MARK: - Inputs -
     
@@ -36,13 +38,19 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     
     // MARK: - OutPuts -
     
-    let created = PublishSubject<Void>()
+    let commentsVariable: Variable<List<Comment>?>
     
     
     // MARK: - Initializers -
     
     init(tweetId: String) {
+        comments = try! Realm().object(ofType: Tweet.self, forPrimaryKey: tweetId)?.comments
+        commentsVariable = Variable<List<Comment>?>(comments)
         setupBindings(tweetId: tweetId)
+    }
+    
+    deinit {
+        token?.stop()
     }
 }
 
@@ -51,10 +59,22 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
 
 extension TweetDetailViewModel {
     
+    fileprivate func setupNotificationToken() {
+        token = comments?.addNotificationBlock { [weak self] change in
+            
+            guard let comments = self?.comments else { return }
+            switch change {
+            case .initial, .update:
+                self?.commentsVariable.value = comments
+            default:
+                break
+            }
+        }
+    }
+    
     fileprivate func setupBindings(tweetId: String) {
         submit.subscribe(onNext: { [weak self] string in
                 self?.createComment(content: string, tweetId: tweetId)
-                self?.created.onNext()
             })
             .disposed(by: disposeBag)
     }

@@ -6,6 +6,8 @@
 import UIKit
 import RealmSwift
 import SnapKit
+import RxSwift
+import RxCocoa
 
 fileprivate enum CellIdentifier: String {
     case uiTableViewCell = "UITableViewCell"
@@ -16,6 +18,8 @@ final class TweetDetailViewController: UIViewController {
     // MARK: - Properties -
     
     fileprivate let tweetId: String
+    fileprivate let disposeBag = DisposeBag()
+    fileprivate let viewModel: TweetDetailViewModelType
     
     
     // MARK: - Views -
@@ -53,8 +57,9 @@ final class TweetDetailViewController: UIViewController {
     
     // MARK: - Initializers -
     
-    init(tweetId: String) {
+    init(tweetId: String, viewModel: TweetDetailViewModelType) {
         self.tweetId = tweetId
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -117,6 +122,27 @@ extension TweetDetailViewController {
             make.left.right.bottom.equalTo(view)
             make.top.equalTo(inputCommentTextField.snp.bottom).offset(32)
         }
+    }
+    
+    fileprivate func subscribeView() {
+        submitCommentButton.rx.tap
+            .filter { [weak self] in
+                self?.inputCommentTextField.text?.isEmpty == false
+            }
+            .subscribe(onNext: { [weak self] in
+                guard let unwrappedSelf = self else { return }
+                unwrappedSelf.viewModel.inputs.submit
+                    .onNext(unwrappedSelf.inputCommentTextField.text!)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    fileprivate func subscribeViewModel() {
+        viewModel.outputs.commentsVariable.asObservable()
+            .subscribe { [weak self] in
+                self?.commentsTableView.reloadData()
+            }
+            .disposed(by: disposeBag)
     }
 }
 
