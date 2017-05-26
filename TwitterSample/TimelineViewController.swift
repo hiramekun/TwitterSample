@@ -25,8 +25,10 @@ final class TimelineViewController: UIViewController {
     
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self,
-                           forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        tableView.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue
+        )
         tableView.rowHeight = 40
         tableView.dataSource = self
         tableView.delegate = self
@@ -126,7 +128,8 @@ extension TimelineViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
+            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath
+        )
         if indexPath.row < viewModel.outputs.tweetVariable.value.count {
             cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
         }
