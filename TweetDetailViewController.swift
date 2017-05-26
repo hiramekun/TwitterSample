@@ -18,7 +18,10 @@ final class TweetDetailViewController: UIViewController {
     
     fileprivate lazy var contentLabel: UILabel = {
         let label = UILabel()
+        label.backgroundColor = .lightGray
+        label.numberOfLines = 0
         label.text = try! Realm().object(ofType: Tweet.self, forPrimaryKey: self.tweetId)?.content
+        label.textAlignment = .center
         return label
     }()
     
