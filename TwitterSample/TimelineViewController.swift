@@ -10,7 +10,7 @@ import SnapKit
 import RealmSwift
 
 fileprivate enum CellIdentifier: String {
-    case uiTableViewCell = "UITableViewCell"
+    case tweetTableViewCell = "TweetTableViewCell"
 }
 
 final class TimelineViewController: UIViewController {
@@ -25,8 +25,10 @@ final class TimelineViewController: UIViewController {
     
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self,
-                           forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
+        tableView.register(
+            TweetTableViewCell.self,
+            forCellReuseIdentifier: CellIdentifier.tweetTableViewCell.rawValue
+        )
         tableView.rowHeight = 40
         tableView.dataSource = self
         tableView.delegate = self
@@ -126,9 +128,12 @@ extension TimelineViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
+            withIdentifier: CellIdentifier.tweetTableViewCell.rawValue, for: indexPath
+        ) as! TweetTableViewCell
+        
         if indexPath.row < viewModel.outputs.tweetVariable.value.count {
-            cell.textLabel?.text = viewModel.outputs.tweetVariable.value[indexPath.row].content
+            let tweet = viewModel.outputs.tweetVariable.value[indexPath.row]
+            cell.update(tweet: tweet)
         }
         return cell
     }
