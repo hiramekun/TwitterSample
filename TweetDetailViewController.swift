@@ -77,7 +77,7 @@ final class TweetDetailViewController: UIViewController {
     }
     
     
-    // MARK: - Extension Methods -
+    // MARK: - Related To Edit -
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
@@ -93,7 +93,6 @@ extension TweetDetailViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = editButtonItem
         
         configure()
         setupView()
@@ -113,6 +112,8 @@ extension TweetDetailViewController {
     }
     
     fileprivate func setupView() {
+        navigationItem.rightBarButtonItem = editButtonItem
+        
         view.addSubview(contentLabel)
         view.addSubview(commentTextField)
         view.addSubview(submitCommentButton)

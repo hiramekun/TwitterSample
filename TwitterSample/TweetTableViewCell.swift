@@ -10,7 +10,7 @@ final class TweetTableViewCell: UITableViewCell {
     
     // MARK: - Views -
     
-    fileprivate lazy var tweetContentLabel: UILabel = {
+    fileprivate lazy var contentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         return label
@@ -43,18 +43,18 @@ final class TweetTableViewCell: UITableViewCell {
 extension TweetTableViewCell {
     
     fileprivate func setupView() {
-        addSubview(tweetContentLabel)
+        addSubview(contentLabel)
         addSubview(latestCommentLabel)
     }
     
     fileprivate func setupLayout() {
-        tweetContentLabel.snp.makeConstraints { make in
+        contentLabel.snp.makeConstraints { make in
             make.left.top.right.equalTo(self).inset(4)
             make.height.equalTo(18)
         }
         
         latestCommentLabel.snp.makeConstraints { make in
-            make.top.equalTo(tweetContentLabel.snp.bottom).offset(4)
+            make.top.equalTo(contentLabel.snp.bottom).offset(4)
             make.left.right.bottom.equalTo(self).inset(4)
             make.height.equalTo(14)
         }
@@ -67,7 +67,7 @@ extension TweetTableViewCell {
 extension TweetTableViewCell {
     
     func update(tweet: Tweet) {
-        tweetContentLabel.text = tweet.content
+        contentLabel.text = tweet.content
         latestCommentLabel.text = tweet.comments
             .sorted(byKeyPath: "createdAt", ascending: false).first?.content
     }
