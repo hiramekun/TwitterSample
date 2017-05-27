@@ -77,7 +77,7 @@ final class TweetDetailViewController: UIViewController {
     }
     
     
-    // MARK: - Override Methods -
+    // MARK: - Extension Methods -
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)

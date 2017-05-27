@@ -6,7 +6,7 @@
 import UIKit
 import SnapKit
 
-final class TimelineTableViewCell: UITableViewCell {
+final class TweetTableViewCell: UITableViewCell {
     
     // MARK: - Views -
     
@@ -40,7 +40,7 @@ final class TimelineTableViewCell: UITableViewCell {
 
 // MARK: - Setup -
 
-extension TimelineTableViewCell {
+extension TweetTableViewCell {
     
     fileprivate func setupView() {
         addSubview(tweetContentLabel)
@@ -64,7 +64,7 @@ extension TimelineTableViewCell {
 
 // MARK: - Update View -
 
-extension TimelineTableViewCell {
+extension TweetTableViewCell {
     
     func update(tweet: Tweet) {
         tweetContentLabel.text = tweet.content
