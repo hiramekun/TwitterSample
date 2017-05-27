@@ -133,9 +133,7 @@ extension TimelineViewController: UITableViewDataSource {
         
         if indexPath.row < viewModel.outputs.tweetVariable.value.count {
             let tweet = viewModel.outputs.tweetVariable.value[indexPath.row]
-            cell.tweetContentLabel.text = tweet.content
-            cell.latestCommentLabel.text = tweet.comments
-                .sorted(byKeyPath: "createdAt", ascending: false).first?.content
+            cell.update(tweet: tweet)
         }
         return cell
     }

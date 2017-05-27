@@ -10,13 +10,13 @@ final class TimelineTableViewCell: UITableViewCell {
     
     // MARK: - Views -
     
-    lazy var tweetContentLabel: UILabel = {
+    fileprivate lazy var tweetContentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     
-    lazy var latestCommentLabel: UILabel = {
+    fileprivate lazy var latestCommentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         return label
@@ -58,5 +58,17 @@ extension TimelineTableViewCell {
             make.left.right.bottom.equalTo(self).inset(4)
             make.height.equalTo(14)
         }
+    }
+}
+
+
+// MARK: - Update View -
+
+extension TimelineTableViewCell {
+    
+    func update(tweet: Tweet) {
+        tweetContentLabel.text = tweet.content
+        latestCommentLabel.text = tweet.comments
+            .sorted(byKeyPath: "createdAt", ascending: false).first?.content
     }
 }
