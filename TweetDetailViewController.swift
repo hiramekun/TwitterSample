@@ -27,7 +27,7 @@ final class TweetDetailViewController: UIViewController {
         let label = UILabel()
         label.backgroundColor = .lightGray
         label.numberOfLines = 0
-        label.text = self.viewModel.outputs.tweet.content
+        label.text = self.viewModel.outputs.tweetVariable.value.content
         label.textAlignment = .center
         return label
     }()
@@ -52,17 +52,13 @@ final class TweetDetailViewController: UIViewController {
     
     fileprivate lazy var commentsTableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue
-        )
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: CellIdentifier.uiTableViewCell.rawValue)
         tableView.rowHeight = 40
         tableView.dataSource = self
-        tableView.delegate = self
         
         return tableView
     }()
-    
     
     // MARK: - Initializers -
     
@@ -74,15 +70,6 @@ final class TweetDetailViewController: UIViewController {
     
     required init(coder aDecoder: NSCoder) {
         fatalError()
-    }
-    
-    
-    // MARK: - Related To Edit -
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        
-        commentsTableView.isEditing = editing
     }
 }
 
@@ -112,8 +99,6 @@ extension TweetDetailViewController {
     }
     
     fileprivate func setupView() {
-        navigationItem.rightBarButtonItem = editButtonItem
-        
         view.addSubview(contentLabel)
         view.addSubview(commentTextField)
         view.addSubview(submitCommentButton)
@@ -168,8 +153,7 @@ extension TweetDetailViewController {
         
         deleteTweetButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.inputs.deleteTweet.onNext()
-                _ = self?.navigationController?.popViewController(animated: true)
+                self?.viewModel.inputs.delete.onNext()
             })
             .disposed(by: disposeBag)
     }
@@ -178,6 +162,20 @@ extension TweetDetailViewController {
         viewModel.outputs.commentsVariable.asObservable()
             .subscribe(onNext: { [weak self] _ in
                 self?.commentsTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.deleteSuccess
+            .subscribe(onNext: { [weak self] isSuccess in
+                if isSuccess {
+                    _ = self?.navigationController?.popViewController(animated: true)
+                }
+                else {
+                    let alertView = UIAlertController(title: "削除失敗", message: "ツイートの削除に失敗しました",
+                                                      preferredStyle: .alert)
+                    alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
+                    self?.present(alertView, animated: true)
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -195,27 +193,8 @@ extension TweetDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath
-        )
+            withIdentifier: CellIdentifier.uiTableViewCell.rawValue, for: indexPath)
         cell.textLabel?.text = viewModel.outputs.commentsVariable.value[indexPath.row].content
         return cell
-    }
-}
-
-
-// MARK: - UITableViewDelegate -
-
-extension TweetDetailViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   commit editingStyle: UITableViewCellEditingStyle,
-                   forRowAt indexPath: IndexPath) {
-        viewModel.inputs.deleteComment.onNext(
-            viewModel.outputs.commentsVariable.value[indexPath.row].id
-        )
     }
 }
