@@ -9,13 +9,13 @@ import RealmSwift
 
 protocol TweetDetailViewModelInputs {
     var submit: PublishSubject<String> { get }
-    var deleteTweet: PublishSubject<Void> { get }
-    var deleteComment: PublishSubject<String> { get }
+    var delete: PublishSubject<Void> { get }
 }
 
 protocol TweetDetailViewModelOutputs {
     var commentsVariable: Variable<Results<Comment>> { get }
-    var tweet: Tweet { get }
+    var tweetVariable: Variable<Tweet> { get }
+    var deleteSuccess: PublishSubject<Bool> { get }
 }
 
 protocol TweetDetailViewModelType {
@@ -29,7 +29,6 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     
     var inputs: TweetDetailViewModelInputs { return self }
     var outputs: TweetDetailViewModelOutputs { return self }
-    let tweet: Tweet
     fileprivate let realm = try! Realm()
     fileprivate let disposeBag = DisposeBag()
     fileprivate var token: NotificationToken?
@@ -39,23 +38,25 @@ final class TweetDetailViewModel: TweetDetailViewModelType, TweetDetailViewModel
     // MARK: - Inputs -
     
     let submit = PublishSubject<String>()
-    let deleteTweet = PublishSubject<Void>()
-    let deleteComment = PublishSubject<String>()
+    let delete = PublishSubject<Void>()
     
     
     // MARK: - OutPuts -
     
     let commentsVariable: Variable<Results<Comment>>
+    let tweetVariable: Variable<Tweet>
+    let deleteSuccess = PublishSubject<Bool>()
     
     
     // MARK: - Initializers -
     
     init(tweetID: String) {
-        tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetID)!
+        let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetID)!
+        tweetVariable = Variable<Tweet>(tweet)
         comments = tweet.comments.sorted(byKeyPath: "createdAt", ascending: true)
         commentsVariable = Variable<Results<Comment>>(comments)
         setupNotificationToken()
-        setupBindings()
+        setupBindings(tweetId: tweetID)
     }
     
     deinit {
@@ -80,33 +81,36 @@ extension TweetDetailViewModel {
         }
     }
     
-    fileprivate func setupBindings() {
-        deleteTweet.subscribe(onNext: { [weak self] in
-                guard let _ = self else { return }
-                try! self!.realm.write {
-                    self!.realm.delete(self!.tweet)
-                }
-            })
-            .disposed(by: disposeBag)
-        
-        deleteComment.subscribe(onNext: { [weak self] id in
-                guard let _ = self else { return }
-                try! self!.realm.write {
-                    guard let comment = self!.realm.object(ofType: Comment.self,
-                                                           forPrimaryKey: id) else { return }
-                    self!.realm.delete(comment)
-                }
+    fileprivate func setupBindings(tweetId: String) {
+        delete.subscribe(onNext: { [weak self] in
+                self?.deleteTweet(tweetId: tweetId)
             })
             .disposed(by: disposeBag)
         
         submit.subscribe(onNext: { [weak self] string in
-                guard let _ = self else { return }
-                try! self!.realm.write {
-                    let comment = Comment()
-                    comment.content = string
-                    self!.tweet.comments.append(comment)
-                }
+                self?.createComment(content: string, tweetId: tweetId)
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func deleteTweet(tweetId: String) {
+        try! realm.write {
+            guard let tweet = realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)
+                else {
+                deleteSuccess.onNext(false)
+                return
+            }
+            
+            realm.delete(tweet)
+            deleteSuccess.onNext(true)
+        }
+    }
+    
+    private func createComment(content: String, tweetId: String) {
+        try! realm.write {
+            let comment = Comment()
+            comment.content = content
+            realm.object(ofType: Tweet.self, forPrimaryKey: tweetId)?.comments.append(comment)
+        }
     }
 }
