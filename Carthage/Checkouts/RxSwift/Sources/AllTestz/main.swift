@@ -46,26 +46,6 @@ final class ObservableOptionalTest_ : ObservableOptionalTest, RxTestCase {
     ] }
 }
 
-final class ObservableShareReplay1Test_ : ObservableShareReplay1Test, RxTestCase {
-    #if os(macOS)
-    required override init() {
-        super.init()
-    }
-    #endif
-
-    static var allTests: [(String, (ObservableShareReplay1Test_) -> () -> ())] { return [
-    ("testShareReplay_DeadlockImmediatelly", ObservableShareReplay1Test.testShareReplay_DeadlockImmediatelly),
-    ("testShareReplay_DeadlockEmpty", ObservableShareReplay1Test.testShareReplay_DeadlockEmpty),
-    ("testShareReplay_DeadlockError", ObservableShareReplay1Test.testShareReplay_DeadlockError),
-    ("testShareReplay1_DeadlockErrorAfterN", ObservableShareReplay1Test.testShareReplay1_DeadlockErrorAfterN),
-    ("testShareReplay1_Basic", ObservableShareReplay1Test.testShareReplay1_Basic),
-    ("testShareReplay1_Error", ObservableShareReplay1Test.testShareReplay1_Error),
-    ("testShareReplay1_Completed", ObservableShareReplay1Test.testShareReplay1_Completed),
-    ("testShareReplayLatestWhileConnected_Completed", ObservableShareReplay1Test.testShareReplayLatestWhileConnected_Completed),
-    ("testShareReplay1_Canceled", ObservableShareReplay1Test.testShareReplay1_Canceled),
-    ] }
-}
-
 final class AnomaliesTest_ : AnomaliesTest, RxTestCase {
     #if os(macOS)
     required override init() {
@@ -75,6 +55,8 @@ final class AnomaliesTest_ : AnomaliesTest, RxTestCase {
 
     static var allTests: [(String, (AnomaliesTest_) -> () -> ())] { return [
     ("test936", AnomaliesTest.test936),
+    ("test1323", AnomaliesTest.test1323),
+    ("test1344", AnomaliesTest.test1344),
     ("testSeparationBetweenOnAndSubscriptionLocks", AnomaliesTest.testSeparationBetweenOnAndSubscriptionLocks),
     ] }
 }
@@ -156,6 +138,15 @@ final class PrimitiveSequenceTest_ : PrimitiveSequenceTest, RxTestCase {
     ("testSingle_retryWhen1_producesSingleElement", PrimitiveSequenceTest.testSingle_retryWhen1_producesSingleElement),
     ("testSingle_retryWhen2_producesSingleElement", PrimitiveSequenceTest.testSingle_retryWhen2_producesSingleElement),
     ("testSingle_timer_producesSingleElement", PrimitiveSequenceTest.testSingle_timer_producesSingleElement),
+    ("testSingle_using_producesSingleElement", PrimitiveSequenceTest.testSingle_using_producesSingleElement),
+    ("testSingle_timeout", PrimitiveSequenceTest.testSingle_timeout),
+    ("testSingle_timeout_other", PrimitiveSequenceTest.testSingle_timeout_other),
+    ("testMaybe_timeout", PrimitiveSequenceTest.testMaybe_timeout),
+    ("testMaybe_timeout_other", PrimitiveSequenceTest.testMaybe_timeout_other),
+    ("testCompletable_timeout", PrimitiveSequenceTest.testCompletable_timeout),
+    ("testCompletable_timeout_other", PrimitiveSequenceTest.testCompletable_timeout_other),
+    ("testCompletable_timeout_succeeds", PrimitiveSequenceTest.testCompletable_timeout_succeeds),
+    ("testCompletable_timeout_other_succeeds", PrimitiveSequenceTest.testCompletable_timeout_other_succeeds),
     ("testAsSingle_Empty", PrimitiveSequenceTest.testAsSingle_Empty),
     ("testAsSingle_One", PrimitiveSequenceTest.testAsSingle_One),
     ("testAsSingle_Many", PrimitiveSequenceTest.testAsSingle_Many),
@@ -175,6 +166,8 @@ final class PrimitiveSequenceTest_ : PrimitiveSequenceTest, RxTestCase {
     ("testAsCompletable_Error", PrimitiveSequenceTest.testAsCompletable_Error),
     ("testAsCompletable_subscribeOnCompleted", PrimitiveSequenceTest.testAsCompletable_subscribeOnCompleted),
     ("testAsCompletable_subscribeOnError", PrimitiveSequenceTest.testAsCompletable_subscribeOnError),
+    ("testCompletable_merge", PrimitiveSequenceTest.testCompletable_merge),
+    ("testCompletable_concat", PrimitiveSequenceTest.testCompletable_concat),
     ("testDebug_producesSingleElement", PrimitiveSequenceTest.testDebug_producesSingleElement),
     ] }
 }
@@ -469,6 +462,35 @@ final class DisposableTest_ : DisposableTest, RxTestCase {
     ] }
 }
 
+final class CompletableAndThenTest_ : CompletableAndThenTest, RxTestCase {
+    #if os(macOS)
+    required override init() {
+        super.init()
+    }
+    #endif
+
+    static var allTests: [(String, (CompletableAndThenTest_) -> () -> ())] { return [
+    ("testCompletableEmpty_CompletableCompleted", CompletableAndThenTest.testCompletableEmpty_CompletableCompleted),
+    ("testCompletableCompleted_CompletableCompleted", CompletableAndThenTest.testCompletableCompleted_CompletableCompleted),
+    ("testCompletableError_CompletableCompleted", CompletableAndThenTest.testCompletableError_CompletableCompleted),
+    ("testCompletableCompleted_CompletableError", CompletableAndThenTest.testCompletableCompleted_CompletableError),
+    ("testCompletableEmpty_SingleCompleted", CompletableAndThenTest.testCompletableEmpty_SingleCompleted),
+    ("testCompletableCompleted_SingleNormal", CompletableAndThenTest.testCompletableCompleted_SingleNormal),
+    ("testCompletableError_SingleNormal", CompletableAndThenTest.testCompletableError_SingleNormal),
+    ("testCompletableCompleted_SingleError", CompletableAndThenTest.testCompletableCompleted_SingleError),
+    ("testCompletableEmpty_MaybeCompleted", CompletableAndThenTest.testCompletableEmpty_MaybeCompleted),
+    ("testCompletableCompleted_MaybeNormal", CompletableAndThenTest.testCompletableCompleted_MaybeNormal),
+    ("testCompletableError_MaybeNormal", CompletableAndThenTest.testCompletableError_MaybeNormal),
+    ("testCompletableCompleted_MaybeError", CompletableAndThenTest.testCompletableCompleted_MaybeError),
+    ("testCompletableCompleted_MaybeEmpty", CompletableAndThenTest.testCompletableCompleted_MaybeEmpty),
+    ("testCompletableEmpty_ObservableCompleted", CompletableAndThenTest.testCompletableEmpty_ObservableCompleted),
+    ("testCompletableCompleted_ObservableNormal", CompletableAndThenTest.testCompletableCompleted_ObservableNormal),
+    ("testCompletableError_ObservableNormal", CompletableAndThenTest.testCompletableError_ObservableNormal),
+    ("testCompletableCompleted_ObservableError", CompletableAndThenTest.testCompletableCompleted_ObservableError),
+    ("testCompletableCompleted_ObservableEmpty", CompletableAndThenTest.testCompletableCompleted_ObservableEmpty),
+    ] }
+}
+
 final class RecursiveLockTests_ : RecursiveLockTests, RxTestCase {
     #if os(macOS)
     required override init() {
@@ -559,6 +581,7 @@ final class DriverTest_ : DriverTest, RxTestCase {
     ("testAsDriver_withLatestFromDefaultOverload", DriverTest.testAsDriver_withLatestFromDefaultOverload),
     ("testAsDriver_skip", DriverTest.testAsDriver_skip),
     ("testAsDriver_startWith", DriverTest.testAsDriver_startWith),
+    ("testAsDriver_delay", DriverTest.testAsDriver_delay),
     ("testAsDriver_interval", DriverTest.testAsDriver_interval),
     ("testAsDriver_timer", DriverTest.testAsDriver_timer),
     ("testDriveObserver", DriverTest.testDriveObserver),
@@ -567,6 +590,12 @@ final class DriverTest_ : DriverTest, RxTestCase {
     ("testdriveVariable", DriverTest.testdriveVariable),
     ("testDriveOptionalVariable", DriverTest.testDriveOptionalVariable),
     ("testDriveVariableNoAmbiguity", DriverTest.testDriveVariableNoAmbiguity),
+    ("testDriverFromOptional", DriverTest.testDriverFromOptional),
+    ("testDriverFromOptionalWhenNil", DriverTest.testDriverFromOptionalWhenNil),
+    ("testDriverFromSequence", DriverTest.testDriverFromSequence),
+    ("testDriverFromArray", DriverTest.testDriverFromArray),
+    ("testDrivingOrderOfSynchronousSubscriptions1", DriverTest.testDrivingOrderOfSynchronousSubscriptions1),
+    ("testDrivingOrderOfSynchronousSubscriptions2", DriverTest.testDrivingOrderOfSynchronousSubscriptions2),
     ] }
 }
 
@@ -643,25 +672,6 @@ final class ObservableWindowTest_ : ObservableWindowTest, RxTestCase {
     ("testWindowWithTimeOrCount_Basic", ObservableWindowTest.testWindowWithTimeOrCount_Basic),
     ("testWindowWithTimeOrCount_Error", ObservableWindowTest.testWindowWithTimeOrCount_Error),
     ("testWindowWithTimeOrCount_Disposed", ObservableWindowTest.testWindowWithTimeOrCount_Disposed),
-    ] }
-}
-
-final class ObservableShareReplay1WhileConnectedTest_ : ObservableShareReplay1WhileConnectedTest, RxTestCase {
-    #if os(macOS)
-    required override init() {
-        super.init()
-    }
-    #endif
-
-    static var allTests: [(String, (ObservableShareReplay1WhileConnectedTest_) -> () -> ())] { return [
-    ("testShareReplayLatestWhileConnected_DeadlockImmediatelly", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_DeadlockImmediatelly),
-    ("testShareReplayLatestWhileConnected_DeadlockEmpty", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_DeadlockEmpty),
-    ("testShareReplayLatestWhileConnected_DeadlockError", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_DeadlockError),
-    ("testShareReplayLatestWhileConnected_DeadlockErrorAfterN", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_DeadlockErrorAfterN),
-    ("testShareReplayLatestWhileConnected_Basic", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_Basic),
-    ("testShareReplayLatestWhileConnected_Error", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_Error),
-    ("testShareReplayLatestWhileConnected_FirstDisconnectsThenEmits_Complete", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_FirstDisconnectsThenEmits_Complete),
-    ("testShareReplayLatestWhileConnected_FirstDisconnectsThenEmits_Error", ObservableShareReplay1WhileConnectedTest.testShareReplayLatestWhileConnected_FirstDisconnectsThenEmits_Error),
     ] }
 }
 
@@ -858,6 +868,14 @@ final class ObservableMulticastTest_ : ObservableMulticastTest, RxTestCase {
     #endif
 
     static var allTests: [(String, (ObservableMulticastTest_) -> () -> ())] { return [
+    ("testMulticastWhileConnected_connectControlsSourceSubscription", ObservableMulticastTest.testMulticastWhileConnected_connectControlsSourceSubscription),
+    ("testMulticastWhileConnected_connectFirstThenSubscribe", ObservableMulticastTest.testMulticastWhileConnected_connectFirstThenSubscribe),
+    ("testMulticastWhileConnected_completed", ObservableMulticastTest.testMulticastWhileConnected_completed),
+    ("testMulticastWhileConnected_error", ObservableMulticastTest.testMulticastWhileConnected_error),
+    ("testMulticastForever_connectControlsSourceSubscription", ObservableMulticastTest.testMulticastForever_connectControlsSourceSubscription),
+    ("testMulticastForever_connectFirstThenSubscribe", ObservableMulticastTest.testMulticastForever_connectFirstThenSubscribe),
+    ("testMulticastForever_completed", ObservableMulticastTest.testMulticastForever_completed),
+    ("testMulticastForever_error", ObservableMulticastTest.testMulticastForever_error),
     ("testMulticast_Cold_Completed", ObservableMulticastTest.testMulticast_Cold_Completed),
     ("testMulticast_Cold_Error", ObservableMulticastTest.testMulticast_Cold_Error),
     ("testMulticast_Cold_Dispose", ObservableMulticastTest.testMulticast_Cold_Dispose),
@@ -869,9 +887,13 @@ final class ObservableMulticastTest_ : ObservableMulticastTest, RxTestCase {
     ("testRefCount_DeadlockErrorImmediatelly", ObservableMulticastTest.testRefCount_DeadlockErrorImmediatelly),
     ("testRefCount_DeadlockEmpty", ObservableMulticastTest.testRefCount_DeadlockEmpty),
     ("testRefCount_ConnectsOnFirst", ObservableMulticastTest.testRefCount_ConnectsOnFirst),
+    ("testRefCount_DoesntConnectsOnFirstInCaseSynchronousCompleted", ObservableMulticastTest.testRefCount_DoesntConnectsOnFirstInCaseSynchronousCompleted),
+    ("testRefCount_DoesntConnectsOnFirstInCaseSynchronousError", ObservableMulticastTest.testRefCount_DoesntConnectsOnFirstInCaseSynchronousError),
     ("testRefCount_NotConnected", ObservableMulticastTest.testRefCount_NotConnected),
     ("testRefCount_Error", ObservableMulticastTest.testRefCount_Error),
     ("testRefCount_Publish", ObservableMulticastTest.testRefCount_Publish),
+    ("testRefCount_synchronousResubscribingOnErrorWorks", ObservableMulticastTest.testRefCount_synchronousResubscribingOnErrorWorks),
+    ("testRefCount_synchronousResubscribingOnCompletedWorks", ObservableMulticastTest.testRefCount_synchronousResubscribingOnCompletedWorks),
     ("testReplayCount_Basic", ObservableMulticastTest.testReplayCount_Basic),
     ("testReplayCount_Error", ObservableMulticastTest.testReplayCount_Error),
     ("testReplayCount_Complete", ObservableMulticastTest.testReplayCount_Complete),
@@ -1150,6 +1172,23 @@ final class ObservableTimerTest_ : ObservableTimerTest, RxTestCase {
     ("testInterval_TimeSpan_Zero_DefaultScheduler", ObservableTimerTest.testInterval_TimeSpan_Zero_DefaultScheduler),
     ("testInterval_TimeSpan_Disposed", ObservableTimerTest.testInterval_TimeSpan_Disposed),
     ("test_IntervalWithRealScheduler", ObservableTimerTest.test_IntervalWithRealScheduler),
+    ] }
+}
+
+final class ObservableShareReplayScopeTests_ : ObservableShareReplayScopeTests, RxTestCase {
+    #if os(macOS)
+    required override init() {
+        super.init()
+    }
+    #endif
+
+    static var allTests: [(String, (ObservableShareReplayScopeTests_) -> () -> ())] { return [
+    ("testReplay_forever_receivesCorrectElements", ObservableShareReplayScopeTests.testReplay_forever_receivesCorrectElements),
+    ("testReplay_whileConnected_receivesCorrectElements", ObservableShareReplayScopeTests.testReplay_whileConnected_receivesCorrectElements),
+    ("testReplay_forever_error", ObservableShareReplayScopeTests.testReplay_forever_error),
+    ("testReplay_whileConnected_error", ObservableShareReplayScopeTests.testReplay_whileConnected_error),
+    ("testReplay_forever_completed", ObservableShareReplayScopeTests.testReplay_forever_completed),
+    ("testReplay_whileConnected_completed", ObservableShareReplayScopeTests.testReplay_whileConnected_completed),
     ] }
 }
 
@@ -1700,6 +1739,16 @@ final class ObservableMergeTest_ : ObservableMergeTest, RxTestCase {
     ("testFlatMapWithIndex_Dispose", ObservableMergeTest.testFlatMapWithIndex_Dispose),
     ("testFlatMapWithIndex_SelectorThrows", ObservableMergeTest.testFlatMapWithIndex_SelectorThrows),
     ("testFlatMapWithIndex_UseFunction", ObservableMergeTest.testFlatMapWithIndex_UseFunction),
+    ("testConcatMap_InnerCompleteFasterThanOuterElementsAreProduced", ObservableMergeTest.testConcatMap_InnerCompleteFasterThanOuterElementsAreProduced),
+    ("testConcatMap_Disposed", ObservableMergeTest.testConcatMap_Disposed),
+    ("testConcatMap_OuterComplete_InnerNotComplete", ObservableMergeTest.testConcatMap_OuterComplete_InnerNotComplete),
+    ("testConcatMap_InnerComplete_OuterNotComplete", ObservableMergeTest.testConcatMap_InnerComplete_OuterNotComplete),
+    ("testConcatMap_InnerComplete_OuterCompleteBeforeInner", ObservableMergeTest.testConcatMap_InnerComplete_OuterCompleteBeforeInner),
+    ("testConcatMap_InnerComplete_OuterCompleteAfterInner", ObservableMergeTest.testConcatMap_InnerComplete_OuterCompleteAfterInner),
+    ("testConcatMap_Error_Outer", ObservableMergeTest.testConcatMap_Error_Outer),
+    ("testConcatMap_Error_Inner", ObservableMergeTest.testConcatMap_Error_Inner),
+    ("testConcatMap_Throw", ObservableMergeTest.testConcatMap_Throw),
+    ("testConcatMap_UseFunction", ObservableMergeTest.testConcatMap_UseFunction),
     ] }
 }
 
@@ -1754,7 +1803,6 @@ func XCTMain(_ tests: [() -> ()]) {
     XCTMain([
         testCase(ObservableWithLatestFromTest_.allTests),
         testCase(ObservableOptionalTest_.allTests),
-        testCase(ObservableShareReplay1Test_.allTests),
         testCase(AnomaliesTest_.allTests),
         testCase(ObservableTakeLastTest_.allTests),
         testCase(PrimitiveSequenceTest_.allTests),
@@ -1772,6 +1820,7 @@ func XCTMain(_ tests: [() -> ()]) {
         testCase(ObservableScanTest_.allTests),
         testCase(ReplaySubjectTest_.allTests),
         testCase(DisposableTest_.allTests),
+        testCase(CompletableAndThenTest_.allTests),
         testCase(RecursiveLockTests_.allTests),
         testCase(QueueTest_.allTests),
         testCase(ObservableSequenceTest_.allTests),
@@ -1780,7 +1829,6 @@ func XCTMain(_ tests: [() -> ()]) {
         testCase(CurrentThreadSchedulerTest_.allTests),
         testCase(ObservableSubscribeOnTest_.allTests),
         testCase(ObservableWindowTest_.allTests),
-        testCase(ObservableShareReplay1WhileConnectedTest_.allTests),
         testCase(ObservableZipTest_.allTests),
         testCase(ObservableSkipUntilTest_.allTests),
         testCase(ObservableDefaultIfEmptyTest_.allTests),
@@ -1804,6 +1852,7 @@ func XCTMain(_ tests: [() -> ()]) {
         testCase(ObservableDematerializeTest_.allTests),
         testCase(VariableTest_.allTests),
         testCase(ObservableTimerTest_.allTests),
+        testCase(ObservableShareReplayScopeTests_.allTests),
         testCase(ReactiveTests_.allTests),
         testCase(ObservableMaterializeTest_.allTests),
         testCase(NSNotificationCenterTests_.allTests),
